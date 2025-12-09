@@ -1,3 +1,4 @@
+# the main entry of the program/site
 from flask import Flask
 
 app = Flask(__name__)
