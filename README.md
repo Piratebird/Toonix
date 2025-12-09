@@ -28,3 +28,19 @@ toonix/ # Project root
 ├── data/ # Optional: store local comics, covers, etc.
 └── uploads/ # Uploaded images or comics (PDF/CBZ)
 ```
+
+## Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/Piratebird/Toonix.git
+cd Toonix
+
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Linux/macOS
+# venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+```
