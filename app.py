@@ -1,5 +1,14 @@
 # !!the main entry of the program/site !! #
 
+"""
+NOTES to self
+
+redirect -> tells the browser go to a different page
+url_for("route_name") -> dynamically finds the url for the flask route [the function of the route]
+"""
+
+# ---- IMPORTS -------#
+
 # importing the session module and redirect and other needed utilities
 from flask import Flask, render_template, request, session, redirect, url_for
 
@@ -34,24 +43,23 @@ def home_page():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    # if the the incoming request is GET then we show the signup page
-    if request.method == "GET":
-        return render_template("signup.html")
 
     # check if the incoming request is POST (form submission)
-    elif request.method == "POST":
+    if request.method == "POST":
         # we imported core/db_management as "db"
         conn = db.connectDB()
-        data = db.auth(conn, request.form)
+        data = db.addUser(conn, request.form)
         conn.close()
 
-    if data["status"]:
-        session["name"] = request.form.get("name", "Guest")
-        session["email"] = request.form.get("email", None)
-    # return status JSON for now
-    return data
+        if data["status"]:
+            # signup successful -> redirect to login page
+            return redirect(url_for("login"))
+        else:
+            # signup failed -> show signup page with error
+            return render_template("signup.html", error=data["data"])
 
-    return render_template("singup.html")
+    # GET request -> show empty signup form
+    return render_template("signup.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -63,12 +71,18 @@ def login():
 
         if data["status"]:
             user = data["data"]
-            # since we know name at index 1 in db
-            # and email at index 2 in db
+            # since we know name at index 1 in db -> name
+            # and email at index 2 in db -> email
             session["name"] = user[1]
             session["email"] = user[2]
-        return data
 
+            # login successful -> redirect to home page
+            return redirect(url_for("home_page"))
+        else:
+            # login failed -> show login page with error
+            return render_template("login.html", error=data["data"])
+
+    # GET request -> show empty login form
     return render_template("login.html")
 
 
