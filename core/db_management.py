@@ -1,7 +1,7 @@
 # NOTE: [IMP!!] later on hash the password using "bcrypt"
 
 
-# importing sqlite to deal with databse
+# importing sqlite to deal with database
 import sqlite3
 
 # for handeling file paths
