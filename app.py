@@ -56,7 +56,17 @@ def signup():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    pass
+    if request.method == "POST":
+        conn = db.connectDB()
+        data = db.auth(conn, request.form)
+        conn.close()
+
+        if data["status"]:
+            user = data["data"]
+            # since we know name at index 1 in db
+            # and email at index 2 in db
+            session["name"] = user[1]
+            session["email"] = user[2]
 
 
 @app.route("/logout")
