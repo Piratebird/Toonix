@@ -34,7 +34,14 @@ def home_page():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    pass
+    if request.method == "POST":
+        # we imported core/db_management as "db"
+        conn = db.connectDB()
+        data = db.auth(conn, request.form)
+        conn.close()
+
+    if data["status"]:
+        pass
 
 
 @app.route("/login", methods=["GET", "POST"])
