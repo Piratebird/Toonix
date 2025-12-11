@@ -73,6 +73,17 @@ def addUser(conn, data):
 
 
 def auth(conn, data):
+    """
+    Authenticates a user based on email and password.
+
+    Parameters:
+    -conn: SQLite connection object
+    -data: directory with keys 'emails' and 'password'
+
+    Returns:
+    - dictionary with 'status' (True/False) and "data"
+    """
+
     try:
         # 1 get the cursor so we can use it
         cur = conn.cursor()
