@@ -67,6 +67,9 @@ def login():
             # and email at index 2 in db
             session["name"] = user[1]
             session["email"] = user[2]
+        return data
+
+    return render_template("login.html")
 
 
 @app.route("/logout")
