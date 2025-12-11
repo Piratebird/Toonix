@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Toonix</title>
+
+    <!-- Bootstrap link-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <!-- Css link-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Bootstrap JS-->
+    <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+
+    <!-- jquery links-->
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/jquery.validate.min.js')}}"></script>
+
+</head>
+
+<body>
+    <!-- Overlay -->
+      <div class="position-absolute w-100 h-100" style="background-color: rgba(0,0,0,0.7); top:0; left:0;"></div>
+    <!-- Hero Section -->
+    <div class="hero d-flex align-items-center justify-content-center text-center text-white">
+        <div class="position-relative">
+            <h1 class="display-3">Every Page Tells a Story...</h1>
+            <h2>Welcome to Toonix!</h2>
+            <p class="lead">Your go-to source for comics.</p>
+            <a href="#content" class="btn btn-primary btn-lg">Get Started</a>
+  </div>
+</div>
+<div>
+    <header>This is a test!</header>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat non iure aliquam autem enim, in itaque vel? Error molestiae asperiores itaque deserunt voluptatum quos! Voluptates ex vitae dolorum rerum voluptas.</p>
+</div>
+</body>
+
+</html>

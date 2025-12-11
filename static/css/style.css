@@ -1,0 +1,27 @@
+
+/* Import thingy for the fonts*/
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@300;400;700&display=swap");
+
+/* Primary Font*/
+h1, h2, h3, h4 {
+  font-family: "Bangers", sans-serif;
+}
+
+/* Secondary Font */
+p, span, li {
+  font-family: "Comic Neue", sans-serif;
+}
+
+/*hero page class*/
+.hero {
+    height: 100vh; /* full viewport */
+    width: 100%;
+    background: url('../images/Artboard1.png') repeat-y; /* corrected path */
+    background-size: cover;
+    animation: scrollBg 480s linear infinite;
+}
+
+@keyframes scrollBg {
+    0% { background-position-y: 0; }
+    100% { background-position-y: 100%; } /* adjust speed */
+}
