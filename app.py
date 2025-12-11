@@ -24,7 +24,7 @@ def home_page():
     return render_template("home.html")
 
 
-@app.route("/signup")
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     pass
 
