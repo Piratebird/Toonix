@@ -2,6 +2,9 @@
 
 A simple Flask project for managing comics.
 
+> **Note:** This is a hobby project created for a university class. The code is meant to help others and demonstrate functionality. It might be expanded into a real project in the future.  
+> ⚠️ **Not yet fully functional**—some features may be incomplete until we get more time to work on it.
+
 ## Project Structure
 
 ```
