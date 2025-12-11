@@ -17,10 +17,10 @@ from flask_session import Session
 
 # importing the database from the /core directory and assign it to db
 from core import db_management as db
-
-app = Flask(__name__)
+from core import api
 
 # ---- SESSION CONFIG -------#
+app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "TOONIX8081"
 app.config["SESSION_TYPE"] = "filesystem"  # store session on server filesystem
