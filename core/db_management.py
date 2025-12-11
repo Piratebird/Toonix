@@ -1,3 +1,6 @@
+# NOTE: [IMP!!] later on hash the password using "bcrypt"
+
+
 # importing sqlite to deal with databse
 import sqlite3
 
@@ -78,10 +81,10 @@ def auth(conn, data):
 
     Parameters:
     -conn: SQLite connection object
-    -data: directory with keys 'emails' and 'password'
+    -data: directory with keys "emails" and "password"
 
     Returns:
-    - dictionary with 'status' (True/False) and "data"
+    - dictionary with "status" (True/False) and "data" (user info or error message)
     """
 
     try:
@@ -93,7 +96,10 @@ def auth(conn, data):
         user = cur.execute(
             "SELECT * FROM users_info WHERE email = ? AND password = ?", vals
         ).fetchone()
-        ####################
+
+        # .fetchone() gets a single row from the query
+
+        # Returning a dictionary with status lets the calling code easily check success.
         if user:
             return {"status": True, "data": user}
         else:
