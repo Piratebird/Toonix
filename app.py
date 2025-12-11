@@ -88,7 +88,12 @@ def login():
 
 @app.route("/logout")
 def logout():
-    pass
+    # might add a logout html file that render a small template
+    name = session.pop("name", None)
+    session.clear()
+    if name:
+        return f"See you later, {name}!"
+    return redirect(url_for("home_page"))
 
 
 @app.route("/guest")
