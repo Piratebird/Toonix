@@ -32,13 +32,17 @@ app.config["SESSION_PERMANENT"] = False
 @app.route("/")
 @app.route("/home")
 def home_page():
+    name = session.get("name")
     guest = request.args.get("guest")
+
     if guest:
         message = "You're browsing as a guest."
+
     elif "name" in session:
-        message = f"Welcome back, {session['name']}"
+        message = f"Welcome back, {name}!"
     else:
-        message = "Welcome! PLease login or signup :)"
+        message = "Welcome to Toonix :)"
+
     return render_template("home.html", message=message)
 
 
