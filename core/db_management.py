@@ -6,7 +6,14 @@ import os
 
 
 def connectDB():
-    conn = sqlite3.connect("model/database.db")
+    # Get the absolute path of the current script
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Build the full path to the database file
+    DB_PATH = os.path.join(BASE_DIR, "database.db")
+
+    # Connect to the SQLite database (will create it if it doesn't exist)
+    conn = sqlite3.connect(DB_PATH)
     conn.execute(
         """CREATE TABLE IF NOT EXISTS users_info 
         (id integer primary key autoincrement, 
@@ -16,6 +23,8 @@ def connectDB():
         gender TEXT, 
         city TEXT)"""
     )
+
+    # return the connection object to be used in other functions
     return conn
 
 
