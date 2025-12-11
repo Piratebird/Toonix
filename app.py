@@ -18,10 +18,18 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 
 
+# ---- ROUTES -------#
 @app.route("/")
 @app.route("/home")
 def home_page():
-    return render_template("home.html")
+    guest = request.args.get("guest")
+    if guest:
+        message = "You're browsing as a guest."
+    elif "name" in session:
+        message = f"Welcome back, {session['name']}"
+    else:
+        message = "Welcome! PLease login or signup :)"
+    return render_template("home.html", message=message)
 
 
 @app.route("/signup", methods=["GET", "POST"])
