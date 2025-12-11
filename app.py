@@ -34,9 +34,11 @@ def home_page():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    # check if the incoming request is POST (form submission)
+    # if the the incoming request is GET then we show the signup page
     if request.method == "GET":
         return render_template("signup.html")
+
+    # check if the incoming request is POST (form submission)
     elif request.method == "POST":
         # we imported core/db_management as "db"
         conn = db.connectDB()
@@ -44,7 +46,12 @@ def signup():
         conn.close()
 
     if data["status"]:
-        pass
+        session["name"] = request.form.get("name", "Guest")
+        session["email"] = request.form.get("email", None)
+    # return status JSON for now
+    return data
+
+    return render_template("singup.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
