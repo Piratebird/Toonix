@@ -23,7 +23,8 @@ app = Flask(__name__)
 # ---- SESSION CONFIG -------#
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = "TOONIX8081"
-app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_TYPE"] = "filesystem"  # store session on server filesystem
+Session(app)  # initialize Flask-Session
 app.config["SESSION_PERMANENT"] = False
 
 
