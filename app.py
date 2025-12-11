@@ -98,7 +98,12 @@ def logout():
 
 @app.route("/guest")
 def guest_access():
-    pass
+    # mark user as a guest in the session
+    session["name"] = "Guest"
+    session["email"] = None  # no email for guests
+
+    # redirect to home page with a query parameter to show guest message
+    return redirect(url_for("home_page", guest=1))
 
 
 if __name__ == "__main__":
