@@ -6,7 +6,7 @@ A simple Flask project for managing comics.
 
 ```
 toonix/                      # Project root
-├── app.py                   # Main Flask app (routes: home, signup, login, logout, guest, search, manga detail, genre)
+├── app.py                   # Main Flask app (routes: home, signup, login, logout, guest, search, manga    detail, genre)
 ├── requirements.txt         # Python dependencies (Flask, requests, Flask-Session, etc.)
 ├── database.db              # SQLite database for users
 ├── core/                    # Python modules for logic / API
