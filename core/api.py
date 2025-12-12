@@ -120,13 +120,13 @@ def get_manga_chapters(manga_id, lang="en"):
     """
 
     # the endpoint for querying chapters
-    url = f"{BASE_URL}/chapter"
+    url = f"{BASE_URL}/manga/{manga_id}/feed"
     params = {
-        "manga": manga_id,
         "translatedLanguage[]": lang,
         # sort in an ascending order 1,2,3...etc
         "order[chapter]": "asc",
         "limit": 500,
+        "includes[]": ["scanlation_group", "user"],
     }
 
     r = requests.get(url, params=params)
