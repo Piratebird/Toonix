@@ -16,21 +16,35 @@
 <body>
   <!-- Header -->
   <header class="fixed-top bg-dark text-white">
-    <div>
-      <nav class="container d-flex justify-content-between p-3">
+  <nav class="container p-3">
+    <div class="row align-items-center">
+
+      <!-- Logo -->
+      <div class="col-auto">
         <img src="/static/images/1x/32h/ToonixFull.png" alt="Logo">
-        <div class="col-2">
-          <a href="/" class="text-white mr-3">Home</a>
-          <a href="/about" class="text-white">About</a>
-        </div>
-      </nav>
+      </div>
+
+      <!-- Links -->
+      <div class="col">
+        <a href="/" class="text-white mr-3">Home</a>
+        <a href="/about" class="text-white">About</a>
+      </div>
+
+      <!-- Account button -->
+      <div class="col-auto">
+        <button id="open-login" class="btn btn-primary btn-lg pop">
+          Account
+        </button>
+      </div>
+
     </div>
-  </header>
+  </nav>
+</header>
 
   <!-- Content block -->
-  <div class="container">
+ 
     {% block content %}{% endblock %}
-  </div>
+  
 
   <!-- JS -->
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
