@@ -4,7 +4,7 @@ import requests
 import os
 import json
 
-# Constants and directories
+# ---- CONSTANTS AND DIRECTORIES -------#
 
 BASE_URL = "https://api.mangadex.org"
 UPLOADS_URL = "https://uploads.mangadex.org"
@@ -13,7 +13,8 @@ CACHE_DIR = "data/cache/manga_metada"
 CHAPTER_CAHCE_DIR = "data/cache/chapters"
 DOWNLOADS_DIR = "data/downloads"
 
-# create needed direcctories
+
+# ---- CREATE NEEDED DIRECTORIES -------#
 os.makedirs(CACHE_DIR, exist_ok=True)
 os.makedirs(CHAPTER_CAHCE_DIR, exist_ok=True)
 os.makedirs(DOWNLOADS_DIR, exist_ok=True)
@@ -39,7 +40,7 @@ def search_manga(title, limit=10):
     r = requests.get(url, params=params)
     # send a get request with the set parameters
     if r.status_code == 200:  # success
-        # parse the json data into python readable shenanigans
+        # parse the json data into python readable shenanigans (dict & lists)
         return r.json().get("data", [])
     return []
 
@@ -47,8 +48,33 @@ def search_manga(title, limit=10):
 # fetch manga metadata (cached)
 
 
-def fetch_manga_local():
-    pass
+def fetch_manga_local(manga_id):
+    """
+    fetch a manga by ID [used id since it's unique identifier].
+    uses local cache if found otherwise requests from MangaDex.
+    """
+
+    # make the file name based on the manga id (json file btw)
+    cache_file = os.path.join(CACHE_DIR, f"{manga_id}.json")
+
+    # load from cache if it exists
+    if os.path.exists(cache_file):
+        with open(cache_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    # fetch from the mangadex api if the there's no cache
+    url = f"{BASE_URL}/manga/{manga_id}"
+    params = {"includes[]": "cover_art"}
+    r = requests.get(url, params=params)
+
+    if r.status_code == 200:  # http -> ok (success)
+        data = r.json().get("data")
+
+        if data:
+            with open(cache_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensures_ascii=False, indent=2)
+            return data
+    return None
 
 
 # get cover image url
