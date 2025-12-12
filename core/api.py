@@ -9,7 +9,7 @@ import json
 BASE_URL = "https://api.mangadex.org"
 UPLOADS_URL = "https://uploads.mangadex.org"
 
-CACHE_DIR = "data/cache/manga_metada"
+CACHE_DIR = "data/cache/manga_metadata"
 CHAPTER_CAHCE_DIR = "data/cache/chapters"
 DOWNLOADS_DIR = "data/downloads"
 
@@ -59,10 +59,13 @@ def fetch_manga_local(manga_id):
 
     # load from cache if it exists
     if os.path.exists(cache_file):
-        with open(cache_file, "r", encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print(f"Warning: cache file {cache_file} is corrupted. Refetching...")
 
-    # fetch from the mangadex api if the there's no cache
+    # fetch from the mangadex api if the there's no cache or if it's corrupted
     url = f"{BASE_URL}/manga/{manga_id}"
     params = {"includes[]": "cover_art"}
     r = requests.get(url, params=params)
@@ -74,7 +77,7 @@ def fetch_manga_local(manga_id):
         if data:
             with open(cache_file, "w", encoding="utf-8") as f:
                 # non ascii-characters are allowed
-                json.dump(data, f, ensures_ascii=False, indent=2)
+                json.dump(data, f, ensure_ascii=False, indent=2)
             return data
     return None
 
@@ -109,5 +112,6 @@ def get_manga_cover(manga):
 
 
 # get chapter(s) list
-def get_manga_chapters():
+def get_manga_chapters(manga_id, lang="en"):
+    """ """
     pass
