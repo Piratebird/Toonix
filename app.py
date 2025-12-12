@@ -22,6 +22,11 @@ from core import api
 # ---- SESSION CONFIG -------#
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+""" 
+in real world application this is bad ,
+but in my case this can be modified later on esp since don't send data or anything 
+best practice either auto generate or .env
+"""
 app.secret_key = "TOONIX8081"
 app.config["SESSION_TYPE"] = "filesystem"  # store session on server filesystem
 Session(app)  # initialize Flask-Session
@@ -118,4 +123,3 @@ if __name__ == "__main__":
     app.run(debug=True, port="8083")
 
 
-""" OKAMA POWER """
