@@ -199,5 +199,26 @@ def get_chapter_images(chapter_id):
     return images
 
 
+# download chapter locally
 def download_chapter(chapter_id):
-    pass
+    """
+    downloads all pages of a chapter into /data/downloads
+    """
+
+    images = get_chapter_images(chapter_id)
+
+    if not images:
+        return False
+
+    chapter_dir = os.path.join(DOWNLOADS_DIR, str(chapter_id))
+    os.makedirs(chapter_dir, exist_ok=True)
+
+    for i, img in enumerate(images):
+        r = requests.get(img)
+        if r.status_code == 200:
+            file_path = os.path.join(chapter_dir, f"page_{i+1}.jpg")
+            # wb -> writing for pdfs images...etc
+            with open(file_path, "wb") as f:
+                f.write(r.content)
+
+    return True
