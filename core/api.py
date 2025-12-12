@@ -15,6 +15,6 @@ CHAPTER_CAHCE_DIR = "data/cache/chapters"
 DOWNLOADS_DIR = "data/downloads"
 
 # create needed direcctories
-os.makedirs(CACHE_DIR, exits_ok=True)
-os.makedirs(CHAPTER_CAHCE_DIR, exits_ok=True)
-os.makedirs(DOWNLOADS_DIR, exits_ok=True)
+os.makedirs(CACHE_DIR, exit_ok=True)
+os.makedirs(CHAPTER_CAHCE_DIR, exit_ok=True)
+os.makedirs(DOWNLOADS_DIR, exit_ok=True)
