@@ -22,10 +22,10 @@ os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 # search manga
 
 """
-title -> a string containing the manga title (query)
-limit -> interger controlling how many results to request [default value of 10]
+title -> a string containing the manga title (query).
+limit -> interger controlling how many results to request [default value of 10].
 
-NOTE might add a timeout later on such as search_manga(title,limit=10,timeout=6)
+NOTE might add a timeout later on such as search_manga(title,limit=10,timeout=6).
 """
 
 
@@ -85,8 +85,8 @@ def fetch_manga_local(manga_id):
 # get cover image url
 def get_manga_cover(manga):
     """
-    manga -> python dictionary that is passed
-    fileName -> actual image file name
+    manga -> python dictionary that is passed.
+    fileName -> actual image file name.
     build and return the cover image url.
     """
 
@@ -114,9 +114,9 @@ def get_manga_cover(manga):
 # get chapter(s) list
 def get_manga_chapters(manga_id, lang="en"):
     """
-    returns all avilable chapters for a manga in the chosem language
+    returns all avilable chapters for a manga in the chosem language.
 
-    currently this only limits to 500 chapter per request later on will have a better implementation
+    currently this only limits to 500 chapter per request later on will have a better implementation.
     """
 
     # the endpoint for querying chapters
@@ -136,7 +136,9 @@ def get_manga_chapters(manga_id, lang="en"):
 
 
 def get_chapter_images(chapter_id):
-    pass
+    """
+    returns a list of page-image URLs for a chapter.
+    """
 
 
 def download_chapter(chapter_id):
