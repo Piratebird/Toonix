@@ -1,9 +1,8 @@
 # attempt for using the mangadex api "https://api.mangadex.org"
 
-# import request
+import requests
 import os
-
-# import json
+import json
 
 # Constants and directories
 
@@ -21,9 +20,28 @@ os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
 # search manga
 
+"""
+title -> a string containing the manga title (query)
+limit -> interger controlling how many results to request [default value of 10]
 
-def search_managa(title, limit):
-    pass
+NOTE might add a timeout later on such as search_manga(title,limit=10,timeout=6)
+"""
+
+
+def search_manga(title, limit=10):
+    """
+    search manga by name/title.
+    returns a list of manga resutls.
+    """
+    url = f"{BASE_URL}/manga"
+    params = {"title": title, "limit": limit, "includes[]": "cover_art"}
+
+    r = requests.get(url, params=params)
+    # send a get request with the set parameters
+    if r.status_code == 200:  # success
+        # parse the json data into python readable shenanigans
+        return r.json().get("data", [])
+    return []
 
 
 # fetch manga metadata (cached)
