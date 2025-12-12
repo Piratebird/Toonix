@@ -68,18 +68,44 @@ def fetch_manga_local(manga_id):
     r = requests.get(url, params=params)
 
     if r.status_code == 200:  # http -> ok (success)
+        # parse response JSON and get the data field
         data = r.json().get("data")
 
         if data:
             with open(cache_file, "w", encoding="utf-8") as f:
+                # non ascii-characters are allowed
                 json.dump(data, f, ensures_ascii=False, indent=2)
             return data
     return None
 
 
 # get cover image url
-def get_manga_cover():
-    pass
+def get_manga_cover(manga):
+    """
+    manga -> python dictionary that is passed
+    fileName -> actual image file name
+    build and return the cover image url.
+    """
+
+    covers = []
+    # access the relationship key in the manga dictionary,
+    # which contains all related objects (author,artist,cover-art....etc)
+    for rel in manga.get("relationships", []):
+        # filters only what has cover_art type
+        if rel["type"] == "cover_art":
+            # make a list for the covers url
+            covers.append(rel)
+
+    # check if at least one cover exist
+    if covers:
+        # take the first art object and access the attributes for the filename
+        file_name = covers[0]["attributes"]["fileName"]
+        # retrives the manga id which is used in the url
+        manga_id = manga["id"]
+        # 512.jpg suffix specifies the width to 512px
+        return f"{UPLOADS_URL}/covers/{manga_id}/{file_name}.512.jpg"
+    # if there's no cover art (object) return none
+    return None
 
 
 # get chapter(s) list
