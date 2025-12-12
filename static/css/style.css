@@ -12,21 +12,26 @@ p, span, li {
   font-family: "Comic Neue", sans-serif;
 }
 
+/* padding for the header*/
+body {
+    padding-top: 80px;
+}
+
 /*hero page class*/
 .hero {
     height: 100vh; /* full viewport */
     width: 100%;
-    background: url('../images/Artboard1.png') repeat-y; /* corrected path */
-    background-size: cover;
+    background: url('../images/herobkg2.png') repeat-y; /* corrected path */
+    background-size: 100%;
+    background-position: top left;
     animation: scrollBg 480s linear infinite;
 }
 .hero-tilt {
-    height: 100vh;
+  height: calc(100vh - 80px); /* 80px = header height */
     width: 100%;
     background: url('../images/Artboard1.png') repeat-y;
-    background-size: cover;
+    background-size: cover; /* better than 100% for tiling */
     animation: scrollBg 480s linear infinite;
-    position: relative;
     overflow: hidden;
 }
 

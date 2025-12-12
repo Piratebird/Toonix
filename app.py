@@ -30,6 +30,9 @@ app.config["SESSION_PERMANENT"] = False
 
 # ---- ROUTES -------#
 @app.route("/")
+def intro_page():
+    return render_template("intro.html")
+
 @app.route("/home")
 def home_page():
     name = session.get("name")
@@ -112,7 +115,7 @@ def guest_access():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port="8011")
+    app.run(debug=True, port="8082")
 
 
-""" OKAMA POWER MF """
+""" OKAMA POWER """
