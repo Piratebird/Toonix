@@ -18,3 +18,26 @@ DOWNLOADS_DIR = "data/downloads"
 os.makedirs(CACHE_DIR, exist_ok=True)
 os.makedirs(CHAPTER_CAHCE_DIR, exist_ok=True)
 os.makedirs(DOWNLOADS_DIR, exist_ok=True)
+
+# search manga
+
+
+def search_managa(title, limit):
+    pass
+
+
+# fetch manga metadata (cached)
+
+
+def fetch_manga_local():
+    pass
+
+
+# get cover image url
+def get_manga_cover():
+    pass
+
+
+# get chapter(s) list
+def get_manga_chapters():
+    pass
