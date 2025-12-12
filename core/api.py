@@ -113,5 +113,31 @@ def get_manga_cover(manga):
 
 # get chapter(s) list
 def get_manga_chapters(manga_id, lang="en"):
-    """ """
+    """
+    returns all avilable chapters for a manga in the chosem language
+
+    currently this only limits to 500 chapter per request later on will have a better implementation
+    """
+
+    # the endpoint for querying chapters
+    url = f"{BASE_URL}/chapter"
+    params = {
+        "manga": manga_id,
+        "translatedLanguage[]": lang,
+        # sort in an ascending order 1,2,3...etc
+        "order[chapter]": "asc",
+        "limit": 500,
+    }
+
+    r = requests.get(url, params=params)
+    if r.status_code == 200:
+        return r.json().get("data", [])
+    return []
+
+
+def get_chapter_images(chapter_id):
+    pass
+
+
+def download_chapter(chapter_id):
     pass
