@@ -20,6 +20,23 @@ p, span, li {
     background-size: cover;
     animation: scrollBg 480s linear infinite;
 }
+.hero-tilt {
+    height: 100vh;
+    width: 100%;
+    background: url('../images/Artboard1.png') repeat-y;
+    background-size: cover;
+    animation: scrollBg 480s linear infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.tilt-box {
+    transform-style: preserve-3d;
+}
+
+.pop {
+    transform: translateZ(30px);
+}
 
 @keyframes scrollBg {
     0% { background-position-y: 0; }
