@@ -10,13 +10,13 @@ BASE_URL = "https://api.mangadex.org"
 UPLOADS_URL = "https://uploads.mangadex.org"
 
 CACHE_DIR = "data/cache/manga_metadata"
-CHAPTER_CAHCE_DIR = "data/cache/chapters"
+CHAPTER_CACHE_DIR = "data/cache/chapters"
 DOWNLOADS_DIR = "data/downloads"
 
 
 # ---- CREATE NEEDED DIRECTORIES -------#
 os.makedirs(CACHE_DIR, exist_ok=True)
-os.makedirs(CHAPTER_CAHCE_DIR, exist_ok=True)
+os.makedirs(CHAPTER_CACHE_DIR, exist_ok=True)
 os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
 # search manga
@@ -135,10 +135,68 @@ def get_manga_chapters(manga_id, lang="en"):
     return []
 
 
+# get chapter image urls
+
+
 def get_chapter_images(chapter_id):
     """
     returns a list of page-image URLs for a chapter.
+
+    MangaDex uses a decenteralized CDN system called 'at-home' server ,
+    [endpoint used ti fetch image files for a chapter].
     """
+    # path to local cache for this chapter's at-home response
+    cache_file = os.path.join(CHAPTER_CACHE_DIR, f"{chapter_id}.json")
+
+    # load from cache if we have cached data
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r") as f:
+                chapter_data = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            # corrupted cache ignore it and refetch
+            chapter_data = None
+    else:
+        # fetch from Mangadex at-home server info for this chapter
+        url = f"{BASE_URL}/at-home/server/{chapter_id}"
+        r = requests.get(url)
+
+        # if the requests fails return None
+        if r.status_code != 200:
+            return None
+
+        # parse the JSON response into python objects
+        chapter_data = r.json()
+
+        # cache it for next time usage
+        try:
+            with open(cache_file, "w", encoding="utf-8") as f:
+                json.dump(chapter_data, f, indent=2, ensure_ascii=False)
+        except OSError:
+            # caching failed, but we still have chapter_data
+            pass
+
+    # extract required fields
+    base = chapter_data["baseUrl"]  # base url of at-home server -> starts the URL
+    info = chapter_data["chapter"]  # chapter metadata -> holds hash and pages
+    chapter_hash = info.get(
+        "hash"
+    )  # folder name for this chapter -> needed to build path
+    pages = info.get("data", [])  # list of filenames -> needed to fetch each image
+
+    if not base or not chapter_hash or not pages:
+        return None
+
+    # empty list to store final URLs
+    images = []
+
+    # loop through every filename in the list of pages
+    for filename in pages:
+        # build the full image URl for this page and append it to the list of images
+        image_url = f"{base}/data/{chapter_hash}/{filename}"
+        images.append(image_url)
+
+    return images
 
 
 def download_chapter(chapter_id):
