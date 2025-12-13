@@ -38,6 +38,7 @@ app.config["SESSION_PERMANENT"] = False
 def intro_page():
     return render_template("intro.html")
 
+
 @app.route("/home")
 def home_page():
     name = session.get("name")
