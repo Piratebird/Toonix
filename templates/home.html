@@ -1,37 +1,71 @@
-{% extends 'base.html' %}
-{% block title %}Toonix{% endblock %}
-{% block content%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div class="container">
+    <title>Toonix</title>
 
-    <div class="row pt-5">
-        <div class="col">
-            <h1>Join us and read to your heart's content!</h1>
-        </div>
+    <!-- Bootstrap link-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+
+    <!-- Css link-->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Bootstrap JS-->
+    <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+
+    <!-- jquery links-->
+    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/jquery.validate.min.js')}}"></script>
+
+    <!--Tilt.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Overlay -->
+    <div
+      class="position-absolute w-100 h-100"
+      style="background-color: rgba(0, 0, 0, 0.7); top: 0; left: 0"
+    ></div>
+    <!-- Hero Section -->
+    <div
+      class="hero d-flex align-items-center justify-content-center text-center text-white"
+    >
+      <div data-tilt class="position-relative">
+        <h1 class="display-3 pop">Every Page Tells a Story...</h1>
+        <h2 class="pop">Welcome to Toonix!</h2>
+        <p class="lead pop">Your go-to source for comics.</p>
+        <a href="#content" class="btn btn-primary btn-lg pop">Get Started</a>
+      </div>
     </div>
-    <div class="row">
-        <div class="col">enter the scoll thingy here</div>
+    <div>
+      <header>This is a test!</header>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat non
+        iure aliquam autem enim, in itaque vel? Error molestiae asperiores
+        itaque deserunt voluptatum quos! Voluptates ex vitae dolorum rerum
+        voluptas.
+      </p>
     </div>
-    <div class="row">
-        <div class="col">
-            <form method="POST">
-                <input type="text" name="query" placeholder="Search manga..." value="{{ query }}">
-                <button type="submit">Search</button>
-            </form>
 
-            <ul>
-                {% for manga in results %}
-                <li>
-                    <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
-                        {{ manga['attributes']['title']['en'] or 'No Title' }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</div>
-
-
-
-{% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <script>
+      VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+        max: 15, // tilt amount
+        speed: 400, // reaction speed
+        glare: true, // optional light effect
+        "max-glare": 0.3,
+      });
+    </script>
+  </body>
+</html>
