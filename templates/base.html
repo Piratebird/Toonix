@@ -45,25 +45,27 @@
 
   {% block content %}{% endblock %}
 
+  <!-- Overlay for dim background-->
   <div id="popup-overlay"></div>
+
   <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
   <div id="login-popup" class="popup-card">
-    <div class="card">
-      <div class="card-body">
-        <h3>Login</h3>
-        <form action="/login" method="post">
-          <input type="email" name="email" placeholder="Email" class="form-control mb-2">
-          <input type="password" name="password" placeholder="Password" class="form-control mb-2">
-          <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
-      </div>
+  <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400">
+    <div class="card-body">
+      <h3>Login</h3>
+      <form action="/login" method="post">
+        <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+        <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
     </div>
   </div>
+</div>
 
   <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
-  <div id="signup-popup" class="popup-card">
-    <div class="card">
+  <div id="signup-popup" class="popup-card" data-tilt>
+    <div class="card" data-tilt>
       <div class="card-body">
         <h3>Signup</h3>
         <form action="/signup" method="post">
@@ -81,12 +83,22 @@
 
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+ 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
   
   <!--Card Functions-->
   <script>
+    
+    
     $(document).ready(function () {
+
+      // Vanilla Tilt init
+      VanillaTilt.init(document.querySelectorAll(".popup-card .card"), {
+        max: 15,
+        speed: 400,
+        glare: false,
+    });
+
       // Open Login
       $("#open-login").click(function (e) {
         e.preventDefault();

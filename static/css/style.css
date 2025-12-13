@@ -8,7 +8,7 @@ h1, h2, h3, h4 {
 }
 
 /* Secondary Font */
-p, span, li {
+p, span, li, a {
   font-family: "Comic Neue", sans-serif;
 }
 
@@ -43,7 +43,7 @@ body {
     transform: translateZ(30px);
 }
 
-/*paralax animation keyframes*/
+/*background scroll keyframes*/
 @keyframes scrollBg {
     0% { background-position-y: 0; }
     100% { background-position-y: 100%; } /* adjust speed */
@@ -71,4 +71,14 @@ body {
   border-radius: 12px;
   box-shadow: 0 0 30px rgba(0,0,0,0.3);
   background: #fff;
+  perspective: 1000px;
+}
+
+.popup-card .card {
+    transform-style: preserve-3d;
+}
+
+/*Removes the goofy white background from behind the account cards when it tilts*/
+.popup-card .js-tilt-glare {
+  background: transparent !important;
 }

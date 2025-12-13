@@ -64,7 +64,7 @@ def signup():
             return redirect(url_for("login"))
         else:
             # signup failed -> show signup page with error
-            return render_template("signup.html", error=data["data"])
+            return render_template("home.html", error=data["data"])
 
     # GET request -> show empty signup form
     return render_template("signup.html")
@@ -88,7 +88,7 @@ def login():
             return redirect(url_for("home_page"))
         else:
             # login failed -> show login page with error
-            return render_template("login.html", error=data["data"])
+            return render_template("home.html", error=data["data"])
 
     # GET request -> show empty login form
     return render_template("login.html")
