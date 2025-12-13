@@ -157,5 +157,22 @@ def view_manga(manga_id):
     return render_template("manga.html", manga=manga, cover=cover, chapters=chapters)
 
 
+@app.route("/chapter/<chapter_id>")
+def read_chapter(chapter_id):
+    images = api.get_chapter_images(chapter_id)
+    if not images:
+        return "Chapter not available", 404
+
+    return render_template("reader.html", images=images, chapter_id=chapter_id)
+
+
+@app.route("/download/<chapter_id>")
+def download_chapter(chapter_id):
+    success = api.download_chapter(chapter_id)
+    if success:
+        return f"Chapter {chapter_id} downloaded successfully!"
+    return "Failed to download chapter.", 500
+
+
 if __name__ == "__main__":
     app.run(debug=True, port="8083")
