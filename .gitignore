@@ -9,3 +9,5 @@ __pycache__/
 /flask_session
 /data/*
 core/test.py
+database.db
+core/database.db
