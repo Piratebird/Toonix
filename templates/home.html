@@ -14,74 +14,24 @@
     </div>
     <div class="row">
         <div class="col">
-            <a href="" class="btn btn-primary btn-lg pop">Login</a>
+            <form method="POST">
+                <input type="text" name="query" placeholder="Search manga..." value="{{ query }}">
+                <button type="submit">Search</button>
+            </form>
+
+            <ul>
+                {% for manga in results %}
+                <li>
+                    <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
+                        {{ manga['attributes']['title']['en'] or 'No Title' }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="col">Column 2</div>
-        <div class="col">Column 3</div>
     </div>
 </div>
 
 
-    <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
-    <div id="login-popup" class="popup-card">
-        <div class="card">
-            <div class="card-body">
-                <h3>Login</h3>
-                <form action="/login" method="post">
-                    <input type="email" name="email" placeholder="Email" class="form-control mb-2">
-                    <input type="password" name="password" placeholder="Password" class="form-control mb-2">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-                <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
-            </div>
-        </div>
-    </div>
 
- <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
-    <div id="signup-popup" class="popup-card">
-  <div class="card">
-    <div class="card-body">
-      <h3>Signup</h3>
-      <form action="/signup" method="post">
-        <input type="text" name="name" placeholder="Name" class="form-control mb-2">
-        <input type="email" name="email" placeholder="Email" class="form-control mb-2">
-        <input type="password" name="password" placeholder="Password" class="form-control mb-2">
-        <button type="submit" class="btn btn-primary">Signup</button>
-      </form>
-      <p class="mt-2">Already have an account? <a href="#" id="switch-to-login">Login</a></p>
-    </div>
-  </div>
-</div>
-
-
-<script>
-   $(document).ready(function () {
-  // Open Login
-  $("#open-login").click(function(e){
-      e.preventDefault();
-      $("#popup-overlay").fadeIn(150);
-      $("#login-popup").fadeIn(250);
-  });
-
-  // Switch to Signup
-  $(document).on("click","#switch-to-signup", function(e){
-      e.preventDefault();
-      $("#login-popup").hide();
-      $("#signup-popup").fadeIn(250);
-  });
-
-  // Switch to Login
-  $(document).on("click","#switch-to-login", function(e){
-      e.preventDefault();
-      $("#signup-popup").hide();
-      $("#login-popup").fadeIn(250);
-  });
-
-  // Close popups when clicking overlay
-  $("#popup-overlay").click(function(){
-      $(".popup-card").fadeOut(150);
-      $("#popup-overlay").fadeOut(150);
-  });
-});
-</script>
 {% endblock %}
