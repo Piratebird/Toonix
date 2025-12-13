@@ -1,72 +1,41 @@
-{% extends 'base.html' %}
-{% block title %}Toonix{% endblock %}
-{% block content%}
-
-<div class="container">
-
-    <div class="row pt-5">
-        <div class="col">
-            <h1>Join us and read to your heart's content!</h1>
-        </div>
+{% extends 'base.html' %} {% block title %}Home | Toonix{% endblock %} {% block
+content %}
+<div class="hero">
+  <div class="container text-center pt-5 mt-5">
+    <!-- HERO TITLE -->
+    <div class="row mb-5">
+      <div class="col">
+        <h1 class="display-4 pop">Read Manga Seamlessly</h1>
+        <p class="lead text-muted">
+          Discover, read, and download your favorite manga.
+        </p>
+        {% if message %}
+        <p class="text-warning">{{ message }}</p>
+        {% endif %}
+      </div>
     </div>
-    <div class="row">
-        <div class="col">enter the scoll thingy here</div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <form method="POST" action="/search" class="search-bar my-4 text-center">
-                <input type="text" name="query" class="form-control d-inline-block w-50" placeholder="Search manga...">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
 
-            <div id="search-results" class="d-flex flex-wrap justify-content-center mt-4">
-                <!-- Manga cards will appear here -->
-            </div>
-        </div>
+    <!-- SEARCH BAR -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-8">
+        <form
+          action="{{ url_for('search') }}"
+          method="POST"
+          class="input-group input-group-lg"
+        >
+          <input
+            type="text"
+            name="query"
+            class="form-control"
+            placeholder="Search manga..."
+            required
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary">Search</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $("#search-btn").click(function () {
-            let query = $("#manga-search").val().trim();
-            if (!query) return;
-
-            // Clear previous results
-            $("#search-results").html("<p>Loading...</p>");
-
-            $.ajax({
-                url: "/search",
-                method: "POST",
-                data: { query: query },
-                success: function (data) {
-                    $("#search-results").html(""); // clear loading
-                    if (data.length === 0) {
-                        $("#search-results").html("<p>No results found.</p>");
-                    } else {
-                        data.forEach(function (manga) {
-                            let cover = manga.relationships.find(r => r.type === "cover_art");
-                            let coverUrl = cover ? `https://uploads.mangadex.org/covers/${manga.id}/${cover.attributes.fileName}.512.jpg` : "";
-
-                            $("#search-results").append(`
-              <div class="card m-2" style="width: 180px;">
-                <img src="${coverUrl}" class="card-img-top" alt="${manga.attributes.title.en || 'No title'}">
-                <div class="card-body">
-                  <h5 class="card-title">${manga.attributes.title.en || 'No title'}</h5>
-                  <a href="/manga/${manga.id}" class="btn btn-sm btn-primary">View</a>
-                </div>
-              </div>
-            `);
-                        });
-                    }
-                },
-                error: function () {
-                    $("#search-results").html("<p>Error fetching results.</p>");
-                }
-            });
-        });
-    });
-</script>
-
-
 {% endblock %}
