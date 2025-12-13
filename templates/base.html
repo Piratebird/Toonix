@@ -16,40 +16,105 @@
 <body>
   <!-- Header -->
   <header class="fixed-top bg-dark text-white">
-  <nav class="container p-3">
-    <div class="row align-items-center">
+    <nav class="container p-3">
+      <div class="row align-items-center">
 
-      <!-- Logo -->
-      <div class="col-auto">
-        <img src="/static/images/1x/32h/ToonixFull.png" alt="Logo">
+        <!-- Logo -->
+        <div class="col-auto">
+          <img src="/static/images/1x/32h/ToonixFull.png" alt="Logo">
+        </div>
+
+        <!-- Links -->
+        <div class="col">
+          <a href="/" class="text-white mr-3">Home</a>
+          <a href="/about" class="text-white">About</a>
+        </div>
+
+        <!-- Account button -->
+        <div class="col-auto">
+          <button id="open-login" href="#" class="btn btn-primary btn-lg pop">
+            Account
+          </button>
+        </div>
+
       </div>
-
-      <!-- Links -->
-      <div class="col">
-        <a href="/" class="text-white mr-3">Home</a>
-        <a href="/about" class="text-white">About</a>
-      </div>
-
-      <!-- Account button -->
-      <div class="col-auto">
-        <button id="open-login" class="btn btn-primary btn-lg pop">
-          Account
-        </button>
-      </div>
-
-    </div>
-  </nav>
-</header>
+    </nav>
+  </header>
 
   <!-- Content block -->
- 
-    {% block content %}{% endblock %}
-  
+
+  {% block content %}{% endblock %}
+
+  <div id="popup-overlay"></div>
+  <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
+  <div id="login-popup" class="popup-card">
+    <div class="card">
+      <div class="card-body">
+        <h3>Login</h3>
+        <form action="/login" method="post">
+          <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+          <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
+  <div id="signup-popup" class="popup-card">
+    <div class="card">
+      <div class="card-body">
+        <h3>Signup</h3>
+        <form action="/signup" method="post">
+          <input type="text" name="name" placeholder="Name" class="form-control mb-2">
+          <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+          <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+          <button type="submit" class="btn btn-primary">Signup</button>
+        </form>
+        <p class="mt-2">Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+
 
   <!-- JS -->
-  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+  
+  <!--Card Functions-->
+  <script>
+    $(document).ready(function () {
+      // Open Login
+      $("#open-login").click(function (e) {
+        e.preventDefault();
+        $("#popup-overlay").fadeIn(150);
+        $("#login-popup").fadeIn(250);
+      });
+
+      // Switch to Signup
+      $(document).on("click", "#switch-to-signup", function (e) {
+        e.preventDefault();
+        $("#login-popup").hide();
+        $("#signup-popup").fadeIn(250);
+      });
+
+      // Switch to Login
+      $(document).on("click", "#switch-to-login", function (e) {
+        e.preventDefault();
+        $("#signup-popup").hide();
+        $("#login-popup").fadeIn(250);
+      });
+
+      // Close popups when clicking overlay
+      $("#popup-overlay").click(function () {
+        $(".popup-card").fadeOut(150);
+        $("#popup-overlay").fadeOut(150);
+      });
+    });
+  </script>
 </body>
 
 </html>

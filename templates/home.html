@@ -19,103 +19,69 @@
         <div class="col">Column 2</div>
         <div class="col">Column 3</div>
     </div>
+</div>
 
 
-    <!-- BOOTSTRAP LOGIN FORM -->
-    <div id="login-popup" class="popup-card" data-tilt>
-        <div class = "container-fluid bg-light" style="height: 500vh">
-        <div class="row  mt-5">
-            <div class="offset-md-3 col-md-6 offset-sm-2 col-sm-8 col-xs-12 mt-5">
-                <div class="card">
-                    <div class="card-body">
-                        <h1>Signup <i class="fa-solid fa-user-plus"></i></h1>
-                        <form action="/signup" method="post" id="signupform">
-                            <div class="form-group">
-                                <label for="name">Name:</label>
-                                <input type="text" name="name" id="name" placeholder="Enter your name.."
-                                    class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" name="email" id="email" placeholder="Enter your email.."
-                                    class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="pwd">Passoword:</label>
-                                <input type="password" name="password" id="pwd" placeholder="Set your password.."
-                                    class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label class="pr-1">Gender:</label>
-                                <div class="form-check-inline">
-                                    <label for="female" class="form-check-label pr-1">female</label>
-                                    <input type="radio" name="gender" id="female" value="female"
-                                        class="form-check-input">
-                                </div>
-                                <div class="form-check-inline">
-                                    <label for="male" class="form-check-label pr-1">male</label>
-                                    <input type="radio" name="gender" id="male" value="male" class="form-check-input">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="city">City:</label>
-                                <select name="city" id="city" class="form-control">
-                                    <option value="Benghazi">Benghazi</option>
-                                    <option value="Tripoli">Tripoli</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <input type="submit" name="signup" id="signup" value="Signup" class="btn btn-primary">
-                                <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-secondary">
-                            </div>
-
-                        </form>
-                        <button id="wht" class="btn btn-info">What is this?</button>
-                        <div id="msg">
-                        </div>
-                    </div>
-                </div>
+    <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
+    <div id="login-popup" class="popup-card">
+        <div class="card">
+            <div class="card-body">
+                <h3>Login</h3>
+                <form action="/login" method="post">
+                    <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+                    <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
             </div>
         </div>
     </div>
+
+ <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
+    <div id="signup-popup" class="popup-card">
+  <div class="card">
+    <div class="card-body">
+      <h3>Signup</h3>
+      <form action="/signup" method="post">
+        <input type="text" name="name" placeholder="Name" class="form-control mb-2">
+        <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+        <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+        <button type="submit" class="btn btn-primary">Signup</button>
+      </form>
+      <p class="mt-2">Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+    </div>
+  </div>
 </div>
 
-</div>
 
 <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
+  // Open Login
+  $("#open-login").click(function(e){
+      e.preventDefault();
+      $("#popup-overlay").fadeIn(150);
+      $("#login-popup").fadeIn(250);
+  });
 
-        // OPEN LOGIN POPUP
-        $("#open-login").click(function () {
-            $("#popup-overlay").fadeIn(150);
-            $("#login-popup").fadeIn(250);
-        });
+  // Switch to Signup
+  $(document).on("click","#switch-to-signup", function(e){
+      e.preventDefault();
+      $("#login-popup").hide();
+      $("#signup-popup").fadeIn(250);
+  });
 
-        // OPEN SIGNUP POPUP
-        $("#open-signup").click(function () {
-            $("#popup-overlay").fadeIn(150);
-            $("#signup-popup").fadeIn(250);
-        });
+  // Switch to Login
+  $(document).on("click","#switch-to-login", function(e){
+      e.preventDefault();
+      $("#signup-popup").hide();
+      $("#login-popup").fadeIn(250);
+  });
 
-        // SWITCH LOGIN → SIGNUP
-        $(document).on("click", "#switch-to-signup", function () {
-            $("#login-popup").hide();
-            $("#signup-popup").fadeIn(250);
-        });
-
-        // SWITCH SIGNUP → LOGIN
-        $(document).on("click", "#switch-to-login", function () {
-            $("#signup-popup").hide();
-            $("#login-popup").fadeIn(250);
-        });
-
-        // CLOSE POPUP (click outside card)
-        $("#popup-overlay").click(function () {
-            $(".popup-card").fadeOut(150);
-            $("#popup-overlay").fadeOut(150);
-        });
-    });
+  // Close popups when clicking overlay
+  $("#popup-overlay").click(function(){
+      $(".popup-card").fadeOut(150);
+      $("#popup-overlay").fadeOut(150);
+  });
+});
 </script>
 {% endblock %}
