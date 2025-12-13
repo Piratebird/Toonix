@@ -1,41 +1,61 @@
-{% extends 'base.html' %} {% block title %}Home | Toonix{% endblock %} {% block
-content %}
-<div class="hero">
-  <div class="container text-center pt-5 mt-5">
-    <!-- HERO TITLE -->
-    <div class="row mb-5">
-      <div class="col">
-        <h1 class="display-4 pop">Read Manga Seamlessly</h1>
-        <p class="lead text-muted">
-          Discover, read, and download your favorite manga.
-        </p>
-        {% if message %}
-        <p class="text-warning">{{ message }}</p>
-        {% endif %}
-      </div>
-    </div>
+{% extends 'base.html' %} {% block title %}Toonix{% endblock %} {% block content
+%}
 
-    <!-- SEARCH BAR -->
-    <div class="row justify-content-center mb-5">
-      <div class="col-md-8">
-        <form
-          action="{{ url_for('search') }}"
-          method="POST"
-          class="input-group input-group-lg"
-        >
-          <input
-            type="text"
-            name="query"
-            class="form-control"
-            placeholder="Search manga..."
-            required
-          />
-          <div class="input-group-append">
-            <button class="btn btn-primary">Search</button>
+<div class="container pt-5 mt-5">
+  <!-- Welcome Message -->
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h4>
+        {% if "user" in session %} Welcome back, {{ session['user']['name'] }}!
+        {% else %} Welcome to Toonix :) {% endif %}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="row mb-4">
+    <div class="col d-flex justify-content-center">
+      <form action="{{ url_for('search') }}" method="post" class="d-flex w-75">
+        <input
+          type="text"
+          name="query"
+          class="form-control"
+          placeholder="Search for manga..."
+          required
+        />
+        <button class="btn btn-primary ms-2" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Featured Manga -->
+  <div class="row">
+    <div class="col text-center">
+      <h5 class="mb-3">Featured Manga</h5>
+      <div class="manga-grid justify-content-center">
+        {% for manga in featured_manga %}
+        <div class="card">
+          <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
+            <img
+              src="{{ manga.cover_url }}"
+              alt="{{ manga['attributes']['title']['en'] }}"
+            />
+          </a>
+          <div class="card-body">
+            <h6 class="card-title">
+              {{ manga['attributes']['title']['en'] or 'No Title' }}
+            </h6>
+            <a
+              href="{{ url_for('view_manga', manga_id=manga['id']) }}"
+              class="btn btn-sm btn-primary mt-1"
+              >View</a
+            >
           </div>
-        </form>
+        </div>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

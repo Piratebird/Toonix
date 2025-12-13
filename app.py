@@ -41,36 +41,45 @@ def intro_page():
 
 @app.route("/home")
 def home_page():
-    name = session.get("name")
+    """
+    Home page route
+    Displays welcome message depending on session or guest access
+    """
     guest = request.args.get("guest")
-
     if guest:
         message = "You're browsing as a guest."
-
-    elif "name" in session:
-        message = f"Welcome back, {name}!"
+    elif "user" in session:
+        message = f"Welcome back, {session['user']['name']}!"
     else:
         message = "Welcome to Toonix :)"
 
-    return render_template("home.html", message=message)
+    # Get manga from API
+    featured_manga = api.search_manga("", limit=8)
+
+    # 🔑 Precompute cover URLs here
+    for manga in featured_manga:
+        manga["cover_url"] = api.get_manga_cover(manga)
+
+    return render_template("home.html", message=message, featured_manga=featured_manga)
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-
-    # check if the incoming request is POST (form submission)
+    """
+    Signup route
+    Adds a new user and redirects to login page upon success
+    """
     if request.method == "POST":
-        # we imported core/db_management as "db"
         conn = db.connectDB()
         data = db.addUser(conn, request.form)
         conn.close()
 
         if data["status"]:
-            # signup successful -> redirect to login page
-            return redirect(url_for("login"))
+            # signup successful -> redirect to login page with message
+            return redirect(url_for("intro_page"))
         else:
             # signup failed -> show signup page with error
-            return render_template("home.html", error=data["data"])
+            return render_template("signup.html", error=data["data"])
 
     # GET request -> show empty signup form
     return render_template("signup.html")
@@ -78,6 +87,15 @@ def signup():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Login route
+    Authenticates user and sets session
+    """
+    message = None
+    # Check if redirected from signup
+    if request.args.get("signup") == "success":
+        message = "Signup successful! Please login."
+
     if request.method == "POST":
         conn = db.connectDB()
         data = db.auth(conn, request.form)
@@ -85,62 +103,62 @@ def login():
 
         if data["status"]:
             user = data["data"]
-            # since we know name at index 1 in db -> name
-            # and email at index 2 in db -> email
+            # store name & email in session
             session["user"] = {"name": user[1], "email": user[2]}
 
             # login successful -> redirect to home page
             return redirect(url_for("home_page"))
         else:
             # login failed -> show login page with error
-            return render_template("home.html", error=data["data"])
+            return render_template("login.html", error=data["data"], message=message)
 
     # GET request -> show empty login form
-    return render_template("login.html")
+    return render_template("login.html", message=message)
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
+    """
+    Logout route
+    Clears session and redirects to intro page
+    """
     session.clear()
     return redirect(url_for("intro_page"))
 
 
 @app.route("/guest")
 def guest_access():
-    # mark user as a guest in the session
+    """
+    Guest access route
+    Sets guest info in session and redirects to home
+    """
     session["name"] = "Guest"
     session["email"] = None  # no email for guests
 
-    # redirect to home page with a query parameter to show guest message
     return redirect(url_for("home_page", guest=1))
 
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
     """
-    results -> empty list to store manga search results
-    query -> empty string to store the search query from the user
+    Manga search route
+    Returns search results from core/api.py
     """
     results = []
     query = ""
 
-    # check if the submitted msg is post
     if request.method == "POST":
-        # request.form -> a dic of data submitted from the html form
-        # .get(query) -> fetch the user's query or wtv
         query = request.form.get("query")
         if query:
-            # call core/api.py search function
             results = api.search_manga(query)
-    # results = results -> pass the search results to the template
-    # query = query -> pass the search term to the template
+
     return render_template("search.html", results=results, query=query)
 
 
 @app.route("/manga/<manga_id>")
 def view_manga(manga_id):
     """
-    fetch metadata and cover and chapter list
+    Fetch metadata, cover, and chapters for a manga
     """
     manga = api.fetch_manga_local(manga_id)
     if not manga:
@@ -154,6 +172,9 @@ def view_manga(manga_id):
 
 @app.route("/chapter/<chapter_id>")
 def read_chapter(chapter_id):
+    """
+    Reads a manga chapter
+    """
     images = api.get_chapter_images(chapter_id)
     if not images:
         return "Chapter not available", 404
@@ -163,6 +184,9 @@ def read_chapter(chapter_id):
 
 @app.route("/download/<chapter_id>")
 def download_chapter(chapter_id):
+    """
+    Downloads a manga chapter
+    """
     success = api.download_chapter(chapter_id)
     if success:
         return f"Chapter {chapter_id} downloaded successfully!"

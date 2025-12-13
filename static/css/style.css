@@ -1,61 +1,75 @@
-
 /* Import thingy for the fonts*/
 @import url("https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@300;400;700&display=swap");
 
-/* Primary Font*/
-h1, h2, h3, h4 {
+/* Primary Font */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Bangers", sans-serif;
 }
 
 /* Secondary Font */
-p, span, li, a {
+p,
+span,
+li,
+a,
+input,
+button {
   font-family: "Comic Neue", sans-serif;
 }
 
-/* padding for the header*/
+/* padding for the header */
 body {
-    padding-top: 80px;
+  padding-top: 80px;
 }
 
 /*hero page class*/
 .hero {
-    height: 100vh; /* full viewport */
-    width: 100%;
-    background: url('../images/herobkg2.png') repeat-y; /* corrected path */
-    background-size: 100%;
-    background-position: top left;
-    animation: scrollBg 480s linear infinite;
+  height: 100vh; /* full viewport */
+  width: 100%;
+  background: url("../images/herobkg2.png") repeat-y; /* corrected path */
+  background-size: 100%;
+  background-position: top left;
+  animation: scrollBg 480s linear infinite;
 }
 .hero-tilt {
   height: calc(100vh - 80px); /* 80px = header height */
-    width: 100%;
-    background: url('../images/Artboard1.png') repeat-y;
-    background-size: cover; /* better than 100% for tiling */
-    animation: scrollBg 480s linear infinite;
-    overflow: hidden;
+  width: 100%;
+  background: url("../images/Artboard1.png") repeat-y;
+  background-size: cover; /* better than 100% for tiling */
+  animation: scrollBg 480s linear infinite;
+  overflow: hidden;
 }
 
 .tilt-box {
-    transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 .pop {
-    transform: translateZ(30px);
+  transform: translateZ(30px);
 }
 
 /*background scroll keyframes*/
 @keyframes scrollBg {
-    0% { background-position-y: 0; }
-    100% { background-position-y: 100%; } /* adjust speed */
+  0% {
+    background-position-y: 0;
+  }
+  100% {
+    background-position-y: 100%;
+  } /* adjust speed */
 }
 
 /*for the forum cards*/
 #popup-overlay {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0, 0, 0, 0.65);
   display: none;
   z-index: 1100;
 }
@@ -63,22 +77,93 @@ body {
 /*for the forum cards*/
 .popup-card {
   position: fixed;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 380px;
   display: none;
   z-index: 1110;
   border-radius: 12px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.3);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
   background: #fff;
   perspective: 1000px;
 }
 
 .popup-card .card {
-    transform-style: preserve-3d;
+  transform-style: preserve-3d;
 }
 
 /*Removes the goofy white background from behind the account cards when it tilts*/
 .popup-card .js-tilt-glare {
   background: transparent !important;
+}
+
+/* ----------------- NEW STYLES ----------------- */
+
+/* Manga card grid */
+.manga-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* slightly smaller gap */
+  justify-content: center;
+}
+
+.manga-grid .card {
+  width: 150px; /* smaller cards */
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+}
+
+.manga-grid .card img {
+  width: 100%;
+  height: 220px; /* smaller height */
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.manga-grid .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.manga-grid .card-body {
+  text-align: center;
+  padding: 0.4rem;
+}
+
+.manga-grid .card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Search bar styling */
+.input-group .form-control {
+  border-radius: 50px 0 0 50px;
+  box-shadow: none;
+}
+
+.input-group .btn {
+  border-radius: 0 50px 50px 0;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .manga-grid .card {
+    width: 45%;
+  }
+
+  .manga-grid .card img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manga-grid .card {
+    width: 90%;
+  }
+
+  .manga-grid .card img {
+    height: 180px;
+  }
 }

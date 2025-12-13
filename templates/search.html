@@ -1,19 +1,32 @@
-<form method="POST">
-  <input
-    type="text"
-    name="query"
-    placeholder="Search manga..."
-    value="{{ query }}"
-  />
-  <button type="submit">Search</button>
-</form>
+{% extends 'base.html' %} {% block title %}Search Results | Toonix{% endblock %}
+{% block content %}
+<div class="container pt-5 mt-5">
+  <!-- Optional Search Message -->
+  {% if query %}
+  <p class="mb-3">Results for "<strong>{{ query }}</strong>":</p>
+  {% endif %}
 
-<ul>
-  {% for manga in results %}
-  <li>
-    <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
-      {{ manga['attributes']['title']['en'] or 'No Title' }}
-    </a>
-  </li>
-  {% endfor %}
-</ul>
+  <!-- Manga Grid -->
+  <div class="manga-grid">
+    {% for manga in results %}
+    <div class="card">
+      <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
+        <img
+          src="{{ manga.cover_url }}"
+          alt="{{ manga['attributes']['title']['en'] }}"
+        />
+      </a>
+      <div class="card-body">
+        <h6 class="card-title">
+          {{ manga['attributes']['title']['en'] or 'No Title' }}
+        </h6>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if not results %}
+  <p>No results found.</p>
+  {% endif %}
+</div>
+{% endblock %}
