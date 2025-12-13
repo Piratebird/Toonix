@@ -119,7 +119,27 @@ def guest_access():
     return redirect(url_for("home_page", guest=1))
 
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    """
+    results -> empty list to store manga search results
+    query -> empty string to store the search query from the user
+    """
+    results = []
+    query = ""
+
+    # check if the submitted msg is post
+    if request.method == "POST":
+        # request.form -> a dic of data submitted from the html form
+        # .get(query) -> fetch the user's query or wtv
+        query = request.form.get("query")
+        if query:
+            # call core/api.py search function
+            results = api.search_manga(query)
+    # results = results -> pass the search results to the template
+    # query = query -> pass the search term to the template
+    return render_template("search.html", results=results, query=query)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port="8083")
-
-
