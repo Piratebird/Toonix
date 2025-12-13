@@ -32,7 +32,7 @@
 
         <!-- Account button -->
         <div class="col-auto">
-          <button id="open-account" class="btn btn-primary btn-lg pop">
+          <button id="open-login" href="#" class="btn btn-primary btn-lg pop">
             Account
           </button>
         </div>
@@ -48,37 +48,20 @@
   <!-- Overlay for dim background-->
   <div id="popup-overlay"></div>
 
-  <!-- Account Menu -->
-  <div id="account-popup" class="popup-card">
-    <div class="card" data-tilt>
-      <div class="card-body text-center">
-
-        {% if session.get("user") %}
-        <h3>Hi {{ session["user"]["name"] }}!</h3>
-        <p class="text-muted">{{ session["user"]["email"] }}</p>
-
-        <button class="btn btn-secondary btn-block mt-3">
-          Reset Password
-        </button>
-
-        <button class="btn btn-danger btn-block mt-2">
-          Delete Account
-        </button>
-
-        <form action="/logout" method="post" class="mt-3">
-          <button class="btn btn-dark btn-block">Log out</button>
-        </form>
-
-        {% else %}
-        <h3>You’re not logged in</h3>
-        <button id="open-login" class="btn btn-primary mt-3">
-          Login
-        </button>
-        {% endif %}
-
-      </div>
+  <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
+  <div id="login-popup" class="popup-card">
+  <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400">
+    <div class="card-body">
+      <h3>Login</h3>
+      <form action="/login" method="post">
+        <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+        <input type="password" name="password" placeholder="Password" class="form-control mb-2">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
     </div>
   </div>
+</div>
 
   <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
   <div id="signup-popup" class="popup-card" data-tilt>
@@ -100,13 +83,13 @@
 
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+ 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
-
+  
   <!--Card Functions-->
   <script>
-
-
+    
+    
     $(document).ready(function () {
 
       // Vanilla Tilt init
@@ -114,13 +97,13 @@
         max: 15,
         speed: 400,
         glare: false,
-      });
+    });
 
-      // Open account menu jquery function
-      $("#open-account").click(function (e) {
+      // Open Login
+      $("#open-login").click(function (e) {
         e.preventDefault();
         $("#popup-overlay").fadeIn(150);
-        $("#account-popup").fadeIn(250);
+        $("#login-popup").fadeIn(250);
       });
 
       // Switch to Signup

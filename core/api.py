@@ -35,14 +35,28 @@ def search_manga(title, limit=10):
     returns a list of manga resutls.
     """
     url = f"{BASE_URL}/manga"
-    params = {"title": title, "limit": limit, "includes[]": "cover_art"}
+    params = {
+        "title": title,
+        "limit": limit,
+        "includes[]": ["cover_art", "tags"],
+        "excludedTags[]": [DOUJIN_TAG_ID],
+        "contentRating[]": ["safe", "suggestive"],
+    }
 
     r = requests.get(url, params=params)
-    # send a get request with the set parameters
-    if r.status_code == 200:  # success
-        # parse the json data into python readable shenanigans (dict & lists)
-        return r.json().get("data", [])
-    return []
+    if r.status_code != 200:
+        return []
+
+    data = r.json().get("data", [])
+    safe_results = []
+    for m in data:
+        if is_doujin(m):
+            continue
+        if looks_like_doujin(m):
+            continue
+        safe_results.append(m)
+
+    return safe_results
 
 
 # fetch manga metadata (cached)
@@ -222,3 +236,19 @@ def download_chapter(chapter_id):
                 f.write(r.content)
 
     return True
+
+
+DOUJIN_TAG_ID = "b13b2a48-c720-44a9-9c77-39c9979373fb"
+
+
+def is_doujin(manga):
+    for tag in manga["attributes"].get("tags", []):
+        if tag["id"] == DOUJIN_TAG_ID:
+            return True
+    return False
+
+
+def looks_like_doujin(manga):
+    title = manga["attributes"].get("title", {})
+    en = title.get("en", "").lower()
+    return "doujin" in en
