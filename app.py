@@ -141,5 +141,20 @@ def search():
     return render_template("search.html", results=results, query=query)
 
 
+@app.route("/manga/<manga_id>")
+def view_manga(manga_id):
+    """
+    fetch metadata and cover and chapter list
+    """
+    manga = api.fetch_manga_local(manga_id)
+    if not manga:
+        return "Manga not found :(", 404
+
+    cover = api.get_manga_cover(manga)
+    chapters = api.get_manga_chapters(manga_id)
+
+    return render_template("manga.html", manga=manga, cover=cover, chapters=chapters)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port="8083")
