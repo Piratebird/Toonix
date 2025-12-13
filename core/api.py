@@ -148,68 +148,55 @@ def get_manga_chapters(manga_id, lang="en"):
         return r.json().get("data", [])
     return []
 
+    # get chapter image urls
 
-# get chapter image urls
-
-
-def get_chapter_images(chapter_id):
     """
     returns a list of page-image URLs for a chapter.
 
     MangaDex uses a decenteralized CDN system called 'at-home' server ,
     [endpoint used ti fetch image files for a chapter].
     """
-    # path to local cache for this chapter's at-home response
-    cache_file = os.path.join(CHAPTER_CACHE_DIR, f"{chapter_id}.json")
 
-    # load from cache if we have cached data
+
+def get_chapter_images(chapter_id):
+    cache_file = os.path.join(CHAPTER_CACHE_DIR, f"{chapter_id}.json")
+    chapter_data = None
+
+    # Try to load cache first
     if os.path.exists(cache_file):
         try:
             with open(cache_file, "r") as f:
                 chapter_data = json.load(f)
         except (OSError, json.JSONDecodeError):
-            # corrupted cache ignore it and refetch
             chapter_data = None
-    else:
-        # fetch from Mangadex at-home server info for this chapter
+
+    # Fetch from server if cache is missing or invalid
+    if not chapter_data:
         url = f"{BASE_URL}/at-home/server/{chapter_id}"
         r = requests.get(url)
-
-        # if the requests fails return None
         if r.status_code != 200:
+            print(f"[ERROR] Chapter {chapter_id} not found on server")
             return None
-
-        # parse the JSON response into python objects
         chapter_data = r.json()
-
-        # cache it for next time usage
+        # save cache
         try:
             with open(cache_file, "w", encoding="utf-8") as f:
-                json.dump(chapter_data, f, indent=2, ensure_ascii=False)
+                json.dump(chapter_data, f, ensure_ascii=False, indent=2)
         except OSError:
-            # caching failed, but we still have chapter_data
             pass
 
-    # extract required fields
-    base = chapter_data["baseUrl"]  # base url of at-home server -> starts the URL
-    info = chapter_data["chapter"]  # chapter metadata -> holds hash and pages
-    chapter_hash = info.get(
-        "hash"
-    )  # folder name for this chapter -> needed to build path
-    pages = info.get("data", [])  # list of filenames -> needed to fetch each image
-
-    if not base or not chapter_hash or not pages:
+    # Extract URLs
+    base = chapter_data.get("baseUrl")
+    info = chapter_data.get("chapter")
+    if not base or not info:
         return None
 
-    # empty list to store final URLs
-    images = []
+    chapter_hash = info.get("hash")
+    pages = info.get("data", [])
+    if not chapter_hash or not pages:
+        return None
 
-    # loop through every filename in the list of pages
-    for filename in pages:
-        # build the full image URl for this page and append it to the list of images
-        image_url = f"{base}/data/{chapter_hash}/{filename}"
-        images.append(image_url)
-
+    images = [f"{base}/data/{chapter_hash}/{page}" for page in pages]
     return images
 
 

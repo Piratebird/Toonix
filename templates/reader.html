@@ -1,1 +1,24 @@
+{% extends "base.html" %} {% block title %}Reading Chapter | Toonix{% endblock
+%} {% block content %}
+<div class="container pt-5 mt-5">
+  <div class="text-center mb-4">
+    <h4>Chapter Reader</h4>
+  </div>
 
+  {% if images %}
+  <div class="chapter-pages text-center">
+    {% for img in images %}
+    <img
+      src="{{ img }}"
+      alt="Page {{ loop.index }}"
+      class="img-fluid mb-3"
+      style="max-width: 100%"
+      loading="lazy"
+    />
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-center">No pages found.</p>
+  {% endif %}
+</div>
+{% endblock %}

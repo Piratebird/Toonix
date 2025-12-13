@@ -45,6 +45,10 @@ def home_page():
     Home page route
     Displays welcome message depending on session or guest access
     """
+    """
+    Home page route
+    Displays welcome message depending on session or guest access
+    """
     guest = request.args.get("guest")
     if guest:
         message = "You're browsing as a guest."
@@ -53,14 +57,32 @@ def home_page():
     else:
         message = "Welcome to Toonix :)"
 
-    # Get manga from API
-    featured_manga = api.search_manga("", limit=8)
+    # List of popular manga titles to feature
+    featured_titles = [
+        "ONE PIECE",
+        "NARUTO",
+        "Bleach",
+        "Attack on Titan",
+        "Jujutsu Kaisen",
+        "Demon Slayer",
+    ]
 
-    # 🔑 Precompute cover URLs here
-    for manga in featured_manga:
-        manga["cover_url"] = api.get_manga_cover(manga)
+    featured_manga = []
 
-    return render_template("home.html", message=message, featured_manga=featured_manga)
+    # For each popular title, search the API and take the first result
+    for title in featured_titles:
+        results = api.search_manga(title, limit=1)  # search top match
+        if results:
+            manga = results[0]  # take first item
+            # get and attach cover url
+            manga["cover_url"] = api.get_manga_cover(manga)
+            featured_manga.append(manga)
+
+    return render_template(
+        "home.html",
+        message=message,
+        featured_manga=featured_manga,
+    )
 
 
 @app.route("/signup", methods=["GET", "POST"])
