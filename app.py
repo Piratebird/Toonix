@@ -170,4 +170,4 @@ def download_chapter(chapter_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port="8084")
+    app.run(debug=True, port="8084", host="0.0.0.0")
