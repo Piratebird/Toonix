@@ -14,20 +14,20 @@
     </div>
     <div class="row">
         <div class="col">
-            <form method="POST">
+            <form method="POST" action="/search">
                 <input type="text" name="query" placeholder="Search manga..." value="{{ query }}">
                 <button type="submit">Search</button>
-            </form>
+                </form>
 
-            <ul>
-                {% for manga in results %}
-                <li>
-                    <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
-                        {{ manga['attributes']['title']['en'] or 'No Title' }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
+                <ul>
+                    {% for manga in results %}
+                    <li>
+                        <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
+                            {{ manga['attributes']['title']['en'] or 'No Title' }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
         </div>
     </div>
 </div>

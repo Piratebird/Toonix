@@ -87,8 +87,7 @@ def login():
             user = data["data"]
             # since we know name at index 1 in db -> name
             # and email at index 2 in db -> email
-            session["name"] = user[1]
-            session["email"] = user[2]
+            session["user"] = {"name": user[1], "email": user[2]}
 
             # login successful -> redirect to home page
             return redirect(url_for("home_page"))
@@ -100,14 +99,10 @@ def login():
     return render_template("login.html")
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["POST"])
 def logout():
-    # might add a logout html file that render a small template
-    name = session.pop("name", None)
     session.clear()
-    if name:
-        return f"See you later, {name}!"
-    return redirect(url_for("home_page"))
+    return redirect(url_for("intro_page"))
 
 
 @app.route("/guest")
