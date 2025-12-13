@@ -86,20 +86,19 @@ def auth(conn, data):
     Returns:
     - dictionary with "status" (True/False) and "data" (user info or error message)
     """
+    email = data.get("email", "").strip()
+    password = data.get("password", "").strip()
+
+    if not email or not password:
+        return {"status": False, "data": "Email and password cannot be empty."}
 
     try:
-        # 1 get the cursor so we can use it
         cur = conn.cursor()
-        # 2  convert the dictionary values into list
-        vals = list(data.values())
-        # 3 select a user from the database
         user = cur.execute(
-            "SELECT * FROM users_info WHERE email = ? AND password = ?", vals
+            "SELECT * FROM users_info WHERE email = ? AND password = ?",
+            (email, password),
         ).fetchone()
 
-        # .fetchone() gets a single row from the query
-
-        # Returning a dictionary with status lets the calling code easily check success.
         if user:
             return {"status": True, "data": user}
         else:

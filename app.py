@@ -79,23 +79,23 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if not email or not password:
+            return render_template("login.html", error="Email and password required.")
+
         conn = db.connectDB()
-        data = db.auth(conn, request.form)
+        data = db.auth(conn, {"email": email, "password": password})
         conn.close()
 
         if data["status"]:
             user = data["data"]
-            # since we know name at index 1 in db -> name
-            # and email at index 2 in db -> email
             session["user"] = {"name": user[1], "email": user[2]}
-
-            # login successful -> redirect to home page
             return redirect(url_for("home_page"))
         else:
-            # login failed -> show login page with error
-            return render_template("home.html", error=data["data"])
+            return render_template("login.html", error=data["data"])
 
-    # GET request -> show empty login form
     return render_template("login.html")
 
 
