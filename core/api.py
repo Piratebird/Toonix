@@ -95,34 +95,29 @@ def fetch_manga_local(manga_id):
             return data
     return None
 
+    # get cover image url
 
-# get cover image url
-def get_manga_cover(manga):
     """
+    Returns a valid cover image URL for a manga.
+
     manga -> python dictionary that is passed.
     fileName -> actual image file name.
     build and return the cover image url.
     """
 
-    covers = []
-    # access the relationship key in the manga dictionary,
-    # which contains all related objects (author,artist,cover-art....etc)
-    for rel in manga.get("relationships", []):
-        # filters only what has cover_art type
-        if rel["type"] == "cover_art":
-            # make a list for the covers url
-            covers.append(rel)
 
-    # check if at least one cover exist
-    if covers:
-        # take the first art object and access the attributes for the filename
-        file_name = covers[0]["attributes"]["fileName"]
-        # retrives the manga id which is used in the url
-        manga_id = manga["id"]
-        # 512.jpg suffix specifies the width to 512px
-        return f"{UPLOADS_URL}/covers/{manga_id}/{file_name}.512.jpg"
-    # if there's no cover art (object) return none
-    return None
+def get_manga_cover(manga):
+    """
+    Returns a valid cover image URL for a manga.
+    """
+    relationships = manga.get("relationships") or []
+    for rel in relationships:
+        if rel.get("type") == "cover_art":
+            file_name = rel.get("attributes", {}).get("fileName")
+            if file_name:
+                return f"{UPLOADS_URL}/covers/{manga['id']}/{file_name}"
+    # fallback placeholder if no cover found
+    return "/static/images/placeholder_cover.png"
 
 
 # get chapter(s) list

@@ -32,26 +32,30 @@
   <div class="row">
     <div class="col text-center">
       <h5 class="mb-3">Featured Manga</h5>
-      <div class="manga-grid justify-content-center">
-        {% for manga in featured_manga %}
+
+      <div class="manga-grid">
+        {% for manga in featured_manga %} {% set title =
+        manga['attributes']['title'].get('en') or
+        manga['attributes']['title'].get('en-us') or
+        manga['attributes']['title'].get('ja-ro') or
+        manga['attributes']['title'].get('ja') or 'No Title' %}
+
         <div class="card">
           <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
-            <img
-              src="{{ manga.cover_url }}"
-              alt="{{ manga['attributes']['title']['en'] }}"
-            />
+            <img src="{{ manga.cover_url }}" alt="{{ title }}" loading="lazy" />
           </a>
+
           <div class="card-body">
-            <h6 class="card-title">
-              {{ manga['attributes']['title']['en'] or 'No Title' }}
-            </h6>
+            <h6 class="card-title">{{ title }}</h6>
             <a
               href="{{ url_for('view_manga', manga_id=manga['id']) }}"
               class="btn btn-sm btn-primary mt-1"
-              >View</a
             >
+              View
+            </a>
           </div>
         </div>
+
         {% endfor %}
       </div>
     </div>

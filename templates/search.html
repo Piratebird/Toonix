@@ -1,6 +1,23 @@
 {% extends 'base.html' %} {% block title %}Search Results | Toonix{% endblock %}
 {% block content %}
 <div class="container pt-5 mt-5">
+  <!-- Search Bar (preserved) -->
+  <div class="row mb-4">
+    <div class="col d-flex justify-content-center">
+      <form action="{{ url_for('search') }}" method="post" class="d-flex w-75">
+        <input
+          type="text"
+          name="query"
+          class="form-control"
+          placeholder="Search for manga..."
+          required
+          value="{{ query }}"
+        />
+        <button class="btn btn-primary ms-2" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Optional Search Message -->
   {% if query %}
   <p class="mb-3">Results for "<strong>{{ query }}</strong>":</p>
@@ -8,18 +25,27 @@
 
   <!-- Manga Grid -->
   <div class="manga-grid">
-    {% for manga in results %}
+    {% for manga in results %} {% set title =
+    manga['attributes']['title'].get('en') or
+    manga['attributes']['title'].get('en-us') or
+    manga['attributes']['title'].get('ja-ro') or
+    manga['attributes']['title'].get('ja') or 'No Title' %}
     <div class="card">
       <a href="{{ url_for('view_manga', manga_id=manga['id']) }}">
         <img
-          src="{{ manga.cover_url }}"
-          alt="{{ manga['attributes']['title']['en'] }}"
+          src="{{ manga.cover_url or '/static/images/placeholder_cover.png' }}"
+          alt="{{ title }}"
+          loading="lazy"
         />
       </a>
       <div class="card-body">
-        <h6 class="card-title">
-          {{ manga['attributes']['title']['en'] or 'No Title' }}
-        </h6>
+        <h6 class="card-title">{{ title }}</h6>
+        <a
+          href="{{ url_for('view_manga', manga_id=manga['id']) }}"
+          class="btn btn-sm btn-primary mt-1"
+        >
+          View
+        </a>
       </div>
     </div>
     {% endfor %}

@@ -59,10 +59,10 @@ def home_page():
 
     # List of popular manga titles to feature
     featured_titles = [
-        "ONE PIECE",
-        "NARUTO",
+        "One Piece (Official Colored)",
+        "Naruto (Official Colored)",
         "Bleach",
-        "Attack on Titan",
+        "Shingeki no Kyojin (Fan Colored)",
         "Jujutsu Kaisen",
         "Demon Slayer",
     ]
@@ -173,6 +173,9 @@ def search():
         query = request.form.get("query")
         if query:
             results = api.search_manga(query)
+            # Attach cover_url for each manga
+            for manga in results:
+                manga["cover_url"] = api.get_manga_cover(manga)
 
     return render_template("search.html", results=results, query=query)
 
