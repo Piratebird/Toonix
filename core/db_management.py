@@ -1,105 +1,72 @@
 # NOTE: [IMP!!] later on hash the password using "bcrypt"
 
-
-# importing sqlite to deal with database
 import sqlite3
-
-# for handeling file paths
 import os
 
 
 def connectDB():
     """
-    os.path.dirname(os.path.abspath(__file__)) --> ensures we get the absloue file path
-
-    DB_PATH = os.path.join(BASE_DIR, "database.db") --> saftly join the directoy with the file
-
-    example: os.path.join(directoy, "file.txt") --> output: directory/file.txt
-
-    note that ? --> placeholder for values in sql
+    Connect to SQLite database. Create 'users_info' table if not exists.
     """
-
-    # Get the absolute path of the current script
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-    # Build the full path to the database file
     DB_PATH = os.path.join(BASE_DIR, "database.db")
-
-    # Connect to the SQLite database (will create it if it doesn't exist)
     conn = sqlite3.connect(DB_PATH)
     conn.execute(
         """CREATE TABLE IF NOT EXISTS users_info 
         (id integer primary key autoincrement, 
         name TEXT, 
         email TEXT, 
-        password TEXT, 
-        gender TEXT, 
-        city TEXT)"""
-    )
-
-    # return the connection object to be used in other functions
+        password TEXT)"""
+    )  # removed gender & city
     return conn
 
 
 def addUser(conn, data):
     """
     Adds a new user to the database.
-
     Parameters:
     - conn: SQLite connection object
-    - data: dictionary with keys 'name', 'email', 'password', 'gender', 'city'
-
+    - data: dictionary with keys 'name', 'email', 'password'
     Returns:
     - dictionary with 'status' (True/False) and 'data' (message)
     """
-
     try:
-        #  create a cursor to execute sql commands
         cur = conn.cursor()
 
-        # typecasting directoy values into a list
-        data = list(data.values())
+        # Only take name, email, password
+        name = data.get("name")
+        email = data.get("email")
+        password = data.get("password")
 
-        # insert the user info into the database
         cur.execute(
-            "INSERT INTO users_info (name,email,password,gender,city) VALUES (?,?,?,?,?)",
-            data,
+            "INSERT INTO users_info (name,email,password) VALUES (?,?,?)",
+            (name, email, password),
         )
         conn.commit()
-
-        # save the changes
         return {"status": True, "data": "User has been added successfully."}
     except Exception as e:
-
-        # catch exceptions and return a failure messsage
         return {"status": False, "data": f"Something went wrong: {e}"}
 
 
 def auth(conn, data):
     """
     Authenticates a user based on email and password.
-
     Parameters:
-    -conn: SQLite connection object
-    -data: directory with keys "emails" and "password"
-
+    - conn: SQLite connection object
+    - data: dictionary with keys "email" and "password"
     Returns:
     - dictionary with "status" (True/False) and "data" (user info or error message)
     """
-
     try:
-        # 1 get the cursor so we can use it
         cur = conn.cursor()
-        # 2  convert the dictionary values into list
-        vals = list(data.values())
-        # 3 select a user from the database
+        email = data.get("email")
+        password = data.get("password")
+
         user = cur.execute(
-            "SELECT * FROM users_info WHERE email = ? AND password = ?", vals
+            "SELECT * FROM users_info WHERE email = ? AND password = ?",
+            (email, password),
         ).fetchone()
 
-        # .fetchone() gets a single row from the query
-
-        # Returning a dictionary with status lets the calling code easily check success.
         if user:
             return {"status": True, "data": user}
         else:
