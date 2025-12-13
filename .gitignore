@@ -8,3 +8,4 @@ __pycache__/
 /core/__pycache__/
 /flask_session
 /data/*
+core/test.py
