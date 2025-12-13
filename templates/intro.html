@@ -47,35 +47,67 @@
 
   <!-- BOOTSTRAP LOGIN FORM POPUP THINGY -->
   <div id="login-popup" class="popup-card">
-    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400">
-      <div class="card-body">
-        <h3 style="color:black">Login</h3>
+
+    <!-- TILT WRAPPER -->
+    <div class="tilt-wrapper" data-tilt data-tilt-max="15" data-tilt-speed="400">
+
+      <!-- PNG CARD -->
+      <img src="static/images/chat-bubble.png" class="card-img">
+
+      <!-- CONTENT -->
+      <div class="card-content">
+        <h3>Login</h3>
+
         <form action="/login" method="post">
-          <input type="email" name="email" placeholder="Email" class="form-control mb-2" required>
-          <input type="password" name="password" placeholder="Password" class="form-control mb-2" required>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+
+          <button type="submit" class="img-btn" data-tilt data-tilt-scale="1.1" data-tilt-reverse="true">
+            <img src="static/images/login-button.png">
+          </button>
         </form>
-        <p class="mt-2">Don't have an account? <a href="#" id="switch-to-signup">Signup</a></p>
+
+        <p>
+          Don't have an account? <br>
+          <a href="#" id="switch-to-signup">Signup</a>
+        </p>
       </div>
+
     </div>
   </div>
 
-  <!-- BOOTSTRAP SIGNUP POPUP MAJIGY-->
+  <!-- BOOTSTRAP SIGNUP POPUP -->
   <div id="signup-popup" class="popup-card">
-    <div class="card" data-tilt data-tilt-max="15" data-tilt-speed="400">
-      <div class="card-body">
-        <h3 style="color:black">Signup</h3>
+
+    <!-- TILT WRAPPER -->
+    <div class="tilt-wrapper" data-tilt data-tilt-max="15" data-tilt-speed="400">
+
+      <!-- PNG CARD -->
+      <img src="static/images/chat-bubble.png" class="card-img">
+
+      <!-- CONTENT -->
+      <div class="card-content">
+        <h3>Signup</h3>
+
         <form action="/signup" method="post">
-          <input type="text" name="name" placeholder="Name" class="form-control mb-2" required> 
-          <input type="email" name="email" placeholder="Email" class="form-control mb-2" required>
-          <input type="password" name="password" placeholder="Password" class="form-control mb-2" required>
-          <button type="submit" class="btn btn-primary">Signup</button>
+          <input type="text" name="name" placeholder="Name" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+
+          <button type="submit" class="img-btn" data-tilt data-tilt-scale="1.1" data-tilt-reverse="true">
+            <img src="static/images/signup-button.png">
+          </button>
         </form>
-        <p style="color:black">Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+
+        <p>
+          Already have an account? <br>
+          <a href="#" id="switch-to-login">Login</a>
+        </p>
       </div>
+
     </div>
-  </div
-  
+  </div>
+
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

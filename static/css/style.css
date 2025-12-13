@@ -24,6 +24,19 @@ button {
 /* padding for the header */
 body {
   padding-top: 80px;
+
+  background-color: #fff;
+
+  background-image:
+    radial-gradient(circle, rgba(0,0,0,0.15) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0,0,0,0.15) 3px, transparent 1px),
+    linear-gradient(180deg, #ffffff, #f2f2f2);
+
+  background-size:
+    8px 8px,
+    100% 100%;
+
+  background-attachment: fixed;
 }
 
 /*hero page class*/
@@ -93,10 +106,78 @@ body {
   transform-style: preserve-3d;
 }
 
+
+.popup-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  display: none;
+  z-index: 1110;
+  perspective: 1000px;
+  background: transparent !important;
+}
+
+.card-img {
+  width: 100%;
+  display: block;
+  pointer-events: none; /* important for tilt */
+}
+
+.card-content {
+  position: absolute;
+  top: 22%;
+  left: 15%;
+  width: 70%;
+  text-align: center;
+}
+
+.card-content input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+.img-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.img-btn img {
+  width: 140px;
+  cursor: pointer;
+}
+
+
 /*Removes the goofy white background from behind the account cards when it tilts*/
 .popup-card .js-tilt-glare {
   background: transparent !important;
 }
+
+/*the previous white background thingy was still tweaking so i added this to work with the chunk above it*/
+.popup-card *,
+.popup-card .card-content input,
+.popup-card .card-content button {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#signup-popup .card-img {
+  transform: scale(1.2); /* tweak this */
+  transform-origin: center;
+}
+
+#getstartedimg {
+  transform: scale(0.2); /* tweak this */
+  transform-origin: center;
+}
+
 
 /* ----------------- NEW STYLES ----------------- */
 
