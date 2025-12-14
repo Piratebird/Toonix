@@ -6,6 +6,13 @@
   </div>
 
   {% if images %}
+  <!-- Download Button -->
+  <div class="text-center mb-4">
+    <button id="download-btn" class="btn btn-outline-primary">
+      Download Chapter
+    </button>
+  </div>
+
   <div class="chapter-pages text-center">
     {% for img in images %}
     <img
@@ -17,6 +24,26 @@
     />
     {% endfor %}
   </div>
+
+  <script>
+    const btn = document.getElementById("download-btn");
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      btn.innerText = "Downloading...";
+      try {
+        const res = await fetch(
+          "{{ url_for('download_chapter', chapter_id=chapter_id) }}"
+        );
+        const data = await res.json();
+        alert(data.message);
+      } catch (err) {
+        alert("Failed to download chapter.");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Download Chapter";
+      }
+    });
+  </script>
   {% else %}
   <p class="text-center">No pages found.</p>
   {% endif %}

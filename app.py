@@ -18,7 +18,7 @@ from flask_session import Session
 # importing the database from the /core directory and assign it to db
 from core import db_management as db
 from core import api
-
+import os
 from flask import send_file
 import io
 import requests
@@ -60,7 +60,7 @@ def home_page():
     # List of popular manga titles to feature
     featured_titles = [
         "One Piece (Official Colored)",
-        "Naruto (Official Colored)",
+        "Narueto (Official Colored)",
         "Bleach",
         "JoJo's Bizarre Adventure, Part 4: Diamond Is Unbreakable (Official Colored)",
         "HUNTER x HUNTER (Official Colored)",
@@ -223,9 +223,22 @@ def read_chapter(chapter_id):
     """
     Reads a manga chapter
     """
-    images = api.get_chapter_images(chapter_id)
-    if not images:
+    data = api.get_chapter_images(chapter_id)
+    if not data:
         return "Chapter not available", 404
+
+    images = []
+    chapter_hash = data.get("hash")
+    pages = data.get("pages", [])
+
+    for page in pages:
+        images.append(
+            url_for(
+                "page_proxy",
+                chapter_hash=chapter_hash,
+                file_name=page,
+            )
+        )
 
     return render_template("reader.html", images=images, chapter_id=chapter_id)
 
@@ -233,12 +246,52 @@ def read_chapter(chapter_id):
 @app.route("/download/<chapter_id>")
 def download_chapter(chapter_id):
     """
-    Downloads a manga chapter
+    Downloads a manga chapter into a structured folder:
+    downloads/<manga_name>/manga-chapter-<chapter_number>
+    Returns JSON status for frontend popup.
     """
-    success = api.download_chapter(chapter_id)
-    if success:
-        return f"Chapter {chapter_id} downloaded successfully!"
-    return "Failed to download chapter.", 500
+    # fetch chapter data
+    chapter_data = api.get_chapter_images(chapter_id)
+    if not chapter_data:
+        return {"status": "error", "message": "Chapter not found."}, 404
+
+    # fetch manga info
+    # find manga id from chapter metadata (Mangadex API requires it)
+    chapter_info = chapter_data.get("chapter", {})
+    manga_id = chapter_info.get("mangaId")
+    chapter_number = chapter_info.get("chapter", "unknown")
+
+    manga = api.fetch_manga_local(manga_id)
+    if not manga:
+        manga_name = "Unknown Manga"
+    else:
+        manga_name = manga["attributes"]["title"].get("en", "Unknown Manga")
+        # sanitize folder name
+        manga_name = "".join(c for c in manga_name if c.isalnum() or c in " _-").strip()
+
+    # create download path
+    chapter_dir = os.path.join(
+        "downloads", manga_name, f"{manga_name}-chapter-{chapter_number}"
+    )
+    os.makedirs(chapter_dir, exist_ok=True)
+
+    # download all pages
+    base = chapter_data.get("base")
+    pages = chapter_data.get("pages", [])
+    chapter_hash = chapter_data.get("hash")
+
+    if not base or not chapter_hash or not pages:
+        return {"status": "error", "message": "Chapter data incomplete."}, 500
+
+    for i, page in enumerate(pages):
+        url = f"{api.UPLOADS_URL}/data/{chapter_hash}/{page}"
+        r = requests.get(url)
+        if r.status_code == 200:
+            file_path = os.path.join(chapter_dir, f"page_{i+1}.jpg")
+            with open(file_path, "wb") as f:
+                f.write(r.content)
+
+    return {"status": "success", "message": f"Chapter {chapter_number} downloaded!"}
 
 
 @app.route("/cover/<manga_id>/<file_name>")
@@ -247,6 +300,20 @@ def cover_proxy(manga_id, file_name):
     Fetch cover from MangaDex and serve it locally to avoid hotlink issues
     """
     url = f"https://uploads.mangadex.org/covers/{manga_id}/{file_name}"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return "Not found", 404
+
+    return send_file(io.BytesIO(r.content), mimetype="image/jpeg")
+
+
+@app.route("/page/<chapter_hash>/<file_name>")
+def page_proxy(chapter_hash, file_name):
+    """
+    Fetch chapter page from MangaDex and serve it locally
+    to avoid hotlink protection
+    """
+    url = f"https://uploads.mangadex.org/data/{chapter_hash}/{file_name}"
     r = requests.get(url)
     if r.status_code != 200:
         return "Not found", 404
