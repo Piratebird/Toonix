@@ -19,6 +19,10 @@ from flask_session import Session
 from core import db_management as db
 from core import api
 
+from flask import send_file
+import io
+import requests
+
 # ---- SESSION CONFIG -------#
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -45,10 +49,6 @@ def home_page():
     Home page route
     Displays welcome message depending on session or guest access
     """
-    """
-    Home page route
-    Displays welcome message depending on session or guest access
-    """
     guest = request.args.get("guest")
     if guest:
         message = "You're browsing as a guest."
@@ -62,9 +62,10 @@ def home_page():
         "One Piece (Official Colored)",
         "Naruto (Official Colored)",
         "Bleach",
-        "Shingeki no Kyojin (Fan Colored)",
-        "Jujutsu Kaisen",
-        "Demon Slayer",
+        "JoJo's Bizarre Adventure, Part 4: Diamond Is Unbreakable (Official Colored)",
+        "HUNTER x HUNTER (Official Colored)",
+        "Fullmetal Alchemist",
+        "Dragon Ball Super",
     ]
 
     featured_manga = []
@@ -75,7 +76,14 @@ def home_page():
         if results:
             manga = results[0]  # take first item
             # get and attach cover url
-            manga["cover_url"] = api.get_manga_cover(manga)
+            cover = api.get_manga_cover(manga)
+            if cover:
+                manga_id, file_name = cover
+                manga["cover_url"] = url_for(
+                    "cover_proxy", manga_id=manga_id, file_name=file_name
+                )
+            else:
+                manga["cover_url"] = "/static/images/placeholder_cover.png"
             featured_manga.append(manga)
 
     return render_template(
@@ -175,7 +183,14 @@ def search():
             results = api.search_manga(query)
             # Attach cover_url for each manga
             for manga in results:
-                manga["cover_url"] = api.get_manga_cover(manga)
+                cover = api.get_manga_cover(manga)
+                if cover:
+                    manga_id, file_name = cover
+                    manga["cover_url"] = url_for(
+                        "cover_proxy", manga_id=manga_id, file_name=file_name
+                    )
+                else:
+                    manga["cover_url"] = "/static/images/placeholder_cover.png"
 
     return render_template("search.html", results=results, query=query)
 
@@ -190,9 +205,17 @@ def view_manga(manga_id):
         return "Manga not found :(", 404
 
     cover = api.get_manga_cover(manga)
+    if cover:
+        manga_id, file_name = cover
+        cover_url = url_for("cover_proxy", manga_id=manga_id, file_name=file_name)
+    else:
+        cover_url = "/static/images/placeholder_cover.png"
+
     chapters = api.get_manga_chapters(manga_id)
 
-    return render_template("manga.html", manga=manga, cover=cover, chapters=chapters)
+    return render_template(
+        "manga.html", manga=manga, cover=cover_url, chapters=chapters
+    )
 
 
 @app.route("/chapter/<chapter_id>")
@@ -216,6 +239,19 @@ def download_chapter(chapter_id):
     if success:
         return f"Chapter {chapter_id} downloaded successfully!"
     return "Failed to download chapter.", 500
+
+
+@app.route("/cover/<manga_id>/<file_name>")
+def cover_proxy(manga_id, file_name):
+    """
+    Fetch cover from MangaDex and serve it locally to avoid hotlink issues
+    """
+    url = f"https://uploads.mangadex.org/covers/{manga_id}/{file_name}"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return "Not found", 404
+
+    return send_file(io.BytesIO(r.content), mimetype="image/jpeg")
 
 
 if __name__ == "__main__":

@@ -13,17 +13,21 @@ CACHE_DIR = "data/cache/manga_metadata"
 CHAPTER_CACHE_DIR = "data/cache/chapters"
 DOWNLOADS_DIR = "data/downloads"
 
-
 # ---- CREATE NEEDED DIRECTORIES -------#
 os.makedirs(CACHE_DIR, exist_ok=True)
 os.makedirs(CHAPTER_CACHE_DIR, exist_ok=True)
 os.makedirs(DOWNLOADS_DIR, exist_ok=True)
 
+# doujin tag id
+DOUJIN_TAG_ID = "b13b2a48-c720-44a9-9c77-39c9979373fb"
+
+# ---- FUNCTIONS ---- #
+
 # search manga
 
 """
 title -> a string containing the manga title (query).
-limit -> interger controlling how many results to request [default value of 10].
+limit -> integer controlling how many results to request [default value of 10].
 
 NOTE might add a timeout later on such as search_manga(title,limit=10,timeout=6).
 """
@@ -32,7 +36,7 @@ NOTE might add a timeout later on such as search_manga(title,limit=10,timeout=6)
 def search_manga(title, limit=10):
     """
     search manga by name/title.
-    returns a list of manga resutls.
+    returns a list of manga results.
     """
     url = f"{BASE_URL}/manga"
     params = {
@@ -50,9 +54,7 @@ def search_manga(title, limit=10):
     data = r.json().get("data", [])
     safe_results = []
     for m in data:
-        if is_doujin(m):
-            continue
-        if looks_like_doujin(m):
+        if is_doujin(m) or looks_like_doujin(m):
             continue
         safe_results.append(m)
 
@@ -95,35 +97,29 @@ def fetch_manga_local(manga_id):
             return data
     return None
 
-    # get cover image url
 
-    """
-    Returns a valid cover image URL for a manga.
+# get cover image url
 
-    manga -> python dictionary that is passed.
-    fileName -> actual image file name.
-    build and return the cover image url.
-    """
+"""
+Returns a valid cover image ID+filename for a manga.
+Instead of building url_for here, Flask will do it in app.py
+"""
 
 
 def get_manga_cover(manga):
-    """
-    Returns a valid cover image URL for a manga.
-    """
     relationships = manga.get("relationships") or []
     for rel in relationships:
         if rel.get("type") == "cover_art":
             file_name = rel.get("attributes", {}).get("fileName")
             if file_name:
-                return f"{UPLOADS_URL}/covers/{manga['id']}/{file_name}"
-    # fallback placeholder if no cover found
-    return "/static/images/placeholder_cover.png"
+                return (manga["id"], file_name)
+    return None
 
 
 # get chapter(s) list
 def get_manga_chapters(manga_id, lang="en"):
     """
-    returns all avilable chapters for a manga in the chosem language.
+    returns all available chapters for a manga in the chosen language.
 
     currently this only limits to 500 chapter per request later on will have a better implementation.
     """
@@ -143,14 +139,15 @@ def get_manga_chapters(manga_id, lang="en"):
         return r.json().get("data", [])
     return []
 
-    # get chapter image urls
 
-    """
-    returns a list of page-image URLs for a chapter.
+# get chapter image urls
 
-    MangaDex uses a decenteralized CDN system called 'at-home' server ,
-    [endpoint used ti fetch image files for a chapter].
-    """
+"""
+returns a list of page-image URLs for a chapter.
+
+MangaDex uses a decentralized CDN system called 'at-home' server ,
+[endpoint used to fetch image files for a chapter].
+"""
 
 
 def get_chapter_images(chapter_id):
@@ -218,9 +215,6 @@ def download_chapter(chapter_id):
                 f.write(r.content)
 
     return True
-
-
-DOUJIN_TAG_ID = "b13b2a48-c720-44a9-9c77-39c9979373fb"
 
 
 def is_doujin(manga):
