@@ -6,8 +6,8 @@
   <div class="row mb-4">
     <div class="col text-center">
       <h4>
-        {% if "user" in session %} Welcome back, {{ session['user']['name'] }}!
-        {% else %} Welcome to Toonix :) {% endif %}
+        {% if "user" in session %} <img src="static/Toonix.png" alt="logo"> Welcome back, {{ session['user']['name'] }}! <img src="static/Toonix.png" alt="logo">
+        {% else %}  <img src="static/Toonix.png" alt="logo"> Welcome to Toonix :) <img src="static/Toonix.png" alt="logo"> {% endif %}
       </h4>
     </div>
   </div>

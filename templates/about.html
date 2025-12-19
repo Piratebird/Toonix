@@ -3,61 +3,65 @@
 {% block title %}About Us{% endblock %}
 
 {% block content %}
-<div class="container py-5 text-white">
+<div class="container py-5">
 
-  <div class="row mb-4">
-    <div class="col text-center">
-      <h1>About Toonix</h1>
-      <p class="lead">
-        Stories, panels, and worlds — all in one place.
-      </p>
-    </div>
+  <!-- Page header -->
+  <div class="text-center mb-5">
+    <img src="static/images/1x/1x/Asset 2.png" alt="">
+    <p class="lead text-dark">Stories, panels, and worlds — all in one place.</p>
   </div>
 
+  <!-- About section -->
   <div class="row justify-content-center mb-5">
     <div class="col-md-8 text-center">
-      <p>
+      <p class="text-dark">
         Toonix was built for people who love getting lost in stories.
-        Manga, comics, and graphic worlds aren’t just entertainment —
-        they’re experiences.
+        Manga, comics, and graphic worlds aren’t just entertainment — they’re experiences.
       </p>
-
-      <p>
-        Our goal is simple: make discovering and reading manga feel smooth,
-        fast, and fun. No clutter. No distractions. Just you and the story.
+      <p class="text-dark">
+        Our goal is simple: make discovering and reading manga feel smooth, fast, and fun.
+        No clutter. No distractions. Just you and the story.
       </p>
     </div>
   </div>
 
-  <div class="row text-center">
+  <!-- Features section as cards -->
+  <div class="row text-center mb-5">
+
     <div class="col-md-4 mb-4">
-      <h3>Discover</h3>
-      <p>
-        Search and explore manga from all genres, new and old.
-      </p>
+      <div class="card h-100 shadow-sm" data-tilt>
+        <div class="card-body">
+          <h3 class="card-title text-dark">Discover</h3>
+          <p class="card-text text-dark">Search and explore manga from all genres, new and old.</p>
+        </div>
+      </div>
     </div>
 
     <div class="col-md-4 mb-4">
-      <h3>Read</h3>
-      <p>
-        Clean layouts, smooth pages, and a focus on readability.
-      </p>
+      <div class="card h-100 shadow-sm" data-tilt>
+        <div class="card-body">
+          <h3 class="card-title text-dark">Read</h3>
+          <p class="card-text text-dark">Clean layouts, smooth pages, and a focus on readability.</p>
+        </div>
+      </div>
     </div>
 
     <div class="col-md-4 mb-4">
-      <h3>Collect</h3>
-      <p>
-        Accounts exist to save progress, favorites, and your reading journey.
-      </p>
+      <div class="card h-100 shadow-sm" data-tilt>
+        <div class="card-body">
+          <h3 class="card-title text-dark">Collect</h3>
+          <p class="card-text text-dark">Accounts save progress, favorites, and your reading journey.</p>
+        </div>
+      </div>
     </div>
+
   </div>
 
-  <div class="row mt-5">
-    <div class="col text-center">
-      <p class="small opacity-75">
-        Built by fans, for fans. Every page tells a story.
-      </p>
-    </div>
+  <!-- Footer note -->
+  <div class="text-center">
+    <p class="small text-dark opacity-75">
+      Built by fans, for fans. Every page tells a story.
+    </p>
   </div>
 
 </div>

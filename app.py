@@ -146,7 +146,7 @@ def login():
     return render_template("login.html", message=message)
 
 
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["POST", "GET"])
 def logout():
     """
     Logout route
