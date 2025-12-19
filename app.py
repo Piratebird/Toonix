@@ -320,6 +320,10 @@ def page_proxy(chapter_hash, file_name):
 
     return send_file(io.BytesIO(r.content), mimetype="image/jpeg")
 
+@app.route("/about")
+def aboutPage():
+    return render_template("about.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True, port="8084", host="0.0.0.0")
